@@ -99,6 +99,8 @@ angular.module('zotermiteApp')
     };
 
     var getLoopLength = function(expression, item){
+      var options = expression.split(':');
+      expression = options.shift();
       var r = /(.*)\s+in\s+(.*)/gi, match;
       while(match = r.exec(expression)){
         var val = match && match[2];
@@ -115,6 +117,19 @@ angular.module('zotermiteApp')
     }
 
     var substituteLoopVals = function(input, expression, loopLength){
+      // console.log('expression : ', expression);
+      var parts = expression.split(':');
+      var options = {};
+
+      expression = parts.shift();
+
+      parts.forEach(function(part){
+        var components = part.split('=');
+        if(components[1]){
+          options[components[0]] = components[1];
+        }
+      });
+      console.log('options : ', options);
       var r = /(.*)\s+in\s+(.*)/gi, match;
       while(match = r.exec(expression)){
         var val = match && match[1];
@@ -122,7 +137,14 @@ angular.module('zotermiteApp')
         if(key){
           var output = '';
           for(var i = 0 ; i < loopLength ; i++){
-            var line = input.replace(new RegExp(val, 'gi'), key + '[' + i + ']') + '\n';
+            var line = input.replace(new RegExp(val, 'gi'), key + '[' + i + ']').trim();
+
+            if(options.separator && i != loopLength - 1){
+              line += options.separator;
+            }else if(options.terminator && i == loopLength - 1){
+              line += options.terminator;
+            }
+            line += '\n';
             output += line;
           }
           return output;
@@ -143,23 +165,30 @@ angular.module('zotermiteApp')
       var matches = activeStr.match(r);
       if(matches){
         for(var i in matches){
+          var matching;
+
           r.exec('');
           // var expressions = r.exec(matches[+i]);
           var expressions = matches[+i].split(':');
           var statement = expressions[0].replace(/\$/g, '');
-          var val = (expressions.length > 1)?expressions[1].replace(/\$/g, ''):undefined;
+          expressions.shift();
+          var val;
 
-          // var statement = expressions[1];
-          // var val = expressions[2];
-          var matching
-          //case of implicit 'set'
-          if(!val){
-              val = statement;//expressions[1];
+          if(expressions.length == 0){
+              val = statement;
               statement = 'set';
               matching = '\\\$'+val.replace(/\./g, '\\\.').replace(/\[/g, '\\\[').replace(/\]/g, '\\\]')+'\\\$'
           }else{
+            val = expressions.join(':').replace(/\$/g, '');
             matching = '\\\$'+statement.replace(/\./g, '\\\.').replace(/\[/g, '\\\[').replace(/\]/g, '\\\]')+':'+val.replace(/\./g, '\\\.').replace(/\[/g, '\\\[').replace(/\]/g, '\\\]')+'\\\$';
           }
+
+
+
+          // var statement = expressions[1];
+          // var val = expressions[2];
+          //case of implicit 'set'
+
           switch(statement){
             //conditionnal
             case 'if':
@@ -187,15 +216,16 @@ angular.module('zotermiteApp')
 
             //loop
             case 'loop':
+
                 // var catchExpression = new RegExp('(\\\$'+statement+':'+val+'\\\$)([\\\s|\\\w|\\\S]*)(\\\$endloop:'+val+'\\\$)', 'gi');
                 // var catchExpression = new RegExp('(\\\$'+statement+':'+val+'\\\$)(\\n.*)(?!\\\$endloop:'+val+'\\\$)\\n?(\\\$endloop:'+val+'\\\$)', 'gi');
                 // var catchExpression = new RegExp('(\\\$'+statement+':'+val+'\\\$)(\\n.*)(?!\\\$endloop:'+val+'\\\$)\\n?(\\\$endloop:'+val+'\\\$)', 'gi');
                 var openingExpression = '$loop:'+val+'$';
-                var endingExpression = '$endloop:'+val+'$';
+                var valWithoutOptions = val.split(':')[0];
+                var endingExpression = '$endloop:'+valWithoutOptions+'$';
                 var openingPart = [activeStr.indexOf(openingExpression), activeStr.indexOf(openingExpression) + openingExpression.length];
                 var contentPart = [activeStr.indexOf(openingExpression) + openingExpression.length, activeStr.indexOf(endingExpression)];
                 var endingPart = [activeStr.indexOf(endingExpression), activeStr.indexOf(endingExpression) + endingExpression.length];
-
                 // var parts = catchExpression.exec(activeStr);
                 var loopLength = getLoopLength(val, item);
                 if(loopLength && endingPart[0] > -1 && endingPart[1] > -1){

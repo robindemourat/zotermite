@@ -13,8 +13,7 @@ $endif:title$
 ### Sous-titre
 ### Auteur
 
-$loop:author in creators$
-coucou
+$loop:author in creators:separator=,:terminator=.$
 $author.firstName$ $author.lastName$
 $endloop:author in creators$
 $if:date$
