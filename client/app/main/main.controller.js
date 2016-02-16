@@ -5,19 +5,7 @@ angular.module('zotermiteApp')
   .controller('MainCtrl', function ($scope, $log, $http, $timeout, ZoteroQueryHandler, ZoteroQueryBuilder, ZoteroTemplateParser, FileDownload, codemirrorMarkdown) {
     var query;
 
-    var loadTemplate = function(url){
-      $http
-        .get(url)
-        .success(function(d){
-          $scope.activeTemplate = d;
-        })
-        .error(function(e){
-          $log.error('Couldn t load template', e);
-        });
-    };
-
     var initVariables = function(){
-      loadTemplate('assets/md-templates/fiche.md');
       $http.get('assets/default-credentials/zotero-credentials.json')
         .success(function(credentials){
           $scope.userId = credentials.userId;

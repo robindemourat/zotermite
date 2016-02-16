@@ -1,45 +1,50 @@
 $filename:begin$ $type$ - $creator_1_first_name$ $creator_1_last_name$ ($date$) - $title$ $filename:end$
 
-$title$, par $creator_1_first_name$ $creator_1_last_name$
+$title$, par $creators[0].firstName$ $creators[0].lastName$
 ===================
+
 
 ## Références minimales
 
 $if:title$
 ### Titre
 $title$
-$endif$
+$endif:title$
 ### Sous-titre
 ### Auteur
-$creator_1_first_name$ $creator_1_last_name$
+
+$loop:author in creators$
+coucou
+$author.firstName$ $author.lastName$
+$endloop:author in creators$
 $if:date$
 ### Année
 $date$
-$endif$
+$endif:date$
 ### Maison d’édition
 ### Type
 $type$
 $if:publication_title$
 ### Publication mère
 Vol $volume_number$ n. $issue_number$
-$endif$
+$endif:publication_title$
 $if:url$
 ### URL texte complet
 $url$
-$endif$
+$endif:url$
 $if:issn$
 ### ISSN
 $issn$
-$endif$
+$endif:issn$
 $if:pages$
 ## Pages
 $pages$
-$endif$
+$endif:pages$
 ### Ce qui est lu
 $if:abstract$
 ### Résumé officiel
 $abstract$
-$endif$
+$endif:abstract$
 ### Lien zotero
 $zotero_url$
 ## Présentation de l’auteur et du contexte d’énonciation
