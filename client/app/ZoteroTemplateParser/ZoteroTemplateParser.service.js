@@ -63,7 +63,6 @@ angular.module('zotermiteApp')
     }
 
     var findValInItem = function(val, item){
-      console.log('find val : ', val);
       var arrayRE = /(.*)\[(\d+)\]/,
           matchArray;
       var key = val, additionalPath = [];
@@ -149,7 +148,6 @@ angular.module('zotermiteApp')
           var expressions = matches[+i].split(':');
           var statement = expressions[0].replace(/\$/g, '');
           var val = (expressions.length > 1)?expressions[1].replace(/\$/g, ''):undefined;
-          console.log(statement, val);
 
           // var statement = expressions[1];
           // var val = expressions[2];
@@ -166,28 +164,48 @@ angular.module('zotermiteApp')
             //conditionnal
             case 'if':
                 // var catchExpression = new RegExp('(\\\$'+statement+':'+val+'\\\$)(\\n.*)(?!\\\$endif:'+val+'\\\$)\\n?(\\\$endif:'+val+'\\\$)', 'gi');
-                var catchExpression = new RegExp('(\\\$'+statement+':'+val+'\\\$)[\\\s|\\\w|\\\S]*(\\\$endif:'+val+'\\\$)', 'gi');
-                var catchAll = new RegExp('(\\\$'+statement+':'+val+'\\\$[\\\s|\\\w|\\\S]*\\\$endif:'+val+'\\\$)', 'gi');
-                var toDelete = (checkVal(val, item))?catchExpression.exec(activeStr):catchAll.exec(activeStr);
-                if(toDelete){
-                    activeStr = activeStr.replace(toDelete[1], '').replace(toDelete[2], '');
+                // var catchExpression = new RegExp('(\\\$'+statement+':'+val+'\\\$)[\\\s|\\\w|\\\S]*(\\\$endif:'+val+'\\\$)', 'gi');
+                var openingExpression = '$if:'+val+'$';
+                var endingExpression = '$endif:'+val+'$';
+                var openingPart = [activeStr.indexOf(openingExpression), activeStr.indexOf(openingExpression) + openingExpression.length];
+                var contentPart = [activeStr.indexOf(openingExpression) + openingExpression.length, activeStr.indexOf(endingExpression)];
+                var endingPart = [activeStr.indexOf(endingExpression), activeStr.indexOf(endingExpression) + endingExpression.length];
+
+                var opening = activeStr.substring(openingPart[0], openingPart[1]),
+                      content = activeStr.substring(contentPart[0], contentPart[1]),
+                      ending = activeStr.substring(endingPart[0], endingPart[1]);
+
+                // var catchAll = new RegExp('(\\\$'+statement+':'+val+'\\\$[\\\s|\\\w|\\\S]*\\\$endif:'+val+'\\\$)', 'gi');
+                var hasVal = (checkVal(val, item))?true:false;
+                activeStr = activeStr.replace(opening, '').replace(ending, '');
+                if(!hasVal){
+                  activeStr = activeStr.replace(content, '');
                 }
+                // var toDelete = (hasVal)?catchExpression.exec(activeStr):catchAll.exec(activeStr);
+                //     activeStr = activeStr.replace(toDelete[1], '').replace(toDelete[2], '');
             break;
 
             //loop
             case 'loop':
                 // var catchExpression = new RegExp('(\\\$'+statement+':'+val+'\\\$)([\\\s|\\\w|\\\S]*)(\\\$endloop:'+val+'\\\$)', 'gi');
                 // var catchExpression = new RegExp('(\\\$'+statement+':'+val+'\\\$)(\\n.*)(?!\\\$endloop:'+val+'\\\$)\\n?(\\\$endloop:'+val+'\\\$)', 'gi');
-                var catchExpression = new RegExp('(\\\$'+statement+':'+val+'\\\$)(\\n.*)(?!\\\$endloop:'+val+'\\\$)\\n?(\\\$endloop:'+val+'\\\$)', 'gi');
-                var catchAll = new RegExp('(\\\$'+statement+':'+val+'\\\$[\\\s|\\\w|\\\S]*\\\$endloop:'+val+'\\\$)', 'gi');
-                var parts = catchExpression.exec(activeStr);
+                // var catchExpression = new RegExp('(\\\$'+statement+':'+val+'\\\$)(\\n.*)(?!\\\$endloop:'+val+'\\\$)\\n?(\\\$endloop:'+val+'\\\$)', 'gi');
+                var openingExpression = '$loop:'+val+'$';
+                var endingExpression = '$endloop:'+val+'$';
+                var openingPart = [activeStr.indexOf(openingExpression), activeStr.indexOf(openingExpression) + openingExpression.length];
+                var contentPart = [activeStr.indexOf(openingExpression) + openingExpression.length, activeStr.indexOf(endingExpression)];
+                var endingPart = [activeStr.indexOf(endingExpression), activeStr.indexOf(endingExpression) + endingExpression.length];
+
+                // var parts = catchExpression.exec(activeStr);
                 var loopLength = getLoopLength(val, item);
-                if(loopLength && parts){
-                  activeStr = activeStr.replace(parts[1], '').replace(parts[3], '');
-                  var newExpression = substituteLoopVals(parts[2], val, loopLength);
-                  activeStr = activeStr.replace(parts[2], newExpression);
-                }else{
-                  activeStr = activeStr.replace(catchAll, '');
+                if(loopLength && endingPart[0] > -1 && endingPart[1] > -1){
+                  var opening = activeStr.substring(openingPart[0], openingPart[1]),
+                      content = activeStr.substring(contentPart[0], contentPart[1]),
+                      ending = activeStr.substring(endingPart[0], endingPart[1]);
+
+                  activeStr = activeStr.replace(opening, '').replace(ending, '');
+                  var newExpression = substituteLoopVals(content, val, loopLength);
+                  activeStr = activeStr.replace(content, newExpression);
                 }
             break;
 
@@ -196,7 +214,7 @@ angular.module('zotermiteApp')
               if(val != 'endif'){
                   var newVal = fetchVal(val, item);
                   matching = new RegExp(matching, 'g');
-                  console.log('set', val, 'from', matching, ' to ', newVal);
+                  // console.log('set', val, 'from', matching, ' to ', newVal);
                   activeStr = activeStr.replace(matching, newVal);
               }
             break;
