@@ -1,0 +1,183 @@
+<div class="col-xs-4 column">
+  <div class="row step-header">
+    <h2><span class="step-number">1</span> Choose a template or edit one</h2>
+  </div>
+
+  <div
+    class="row long-container editor-container"
+    fit-height
+    fit-to-parent
+  >
+    <div class="consultable-container"
+        fit-height=".editor-container"
+     >
+      <ui-codemirror
+        fit-height=".editor-container"
+        ui-codemirror-opts="editorOptions"
+        placeholder="type a template for markdown body"
+        ng-model="activeTemplate"
+      ></ui-codemirror>
+    </div>
+  </div>
+
+  <!--<div class="row bottom-group">
+    <div class="row final-step btn-group">
+      <div class="btn">help</div>
+      <div class="btn">import</div>
+      <div class="btn">save</div>
+    </div>
+  </div>-->
+
+</div>
+<!--END COLUMN 1 -->
+
+<!-- COLUMN 2 -->
+<div class="col-xs-4 column">
+  <div class="row step-header">
+    <h2><span class="step-number">2</span> Select reference(s) in your zotero library</h2>
+  </div>
+
+  <div class="row selectors-container inline-options-container">
+    <form class="inline-option inline-option-big inline-options-container animate" ng-submit="newZoteroQuery(searchQuery)">
+      <input class="inline-option inline-option-big" type="text" placeholder="query your zotero library" ng-model="searchQuery">
+      <input class="inline-option" type="submit">
+    </form>
+    <div
+      class="inline-option btn animate"
+      ng-click="addAllMatching()"
+      ng-show="overallItems.length > 0"
+    >
+      Select all
+    </div>
+  </div>
+
+  <div class="row results-display-container long-container animate-fast"fit-height fit-to-parent>
+    <div class="consultable-container animate">
+
+      <div class="loading"
+        ng-show="overallItems.length == 0"
+      >
+        Loading
+      </div>
+      <div
+        class="zotero-item animate"
+        ng-repeat="item in overallItems | filter:searchInItem"
+        ng-click="addToSelected($index)"
+      >
+        <h4 class="zotero-title" ng-bind="item.data.title"></h4>
+        <p class="zotero-authors" ng-if="item.data.creators">
+          <p ng-repeat="creator in item.data.creators track by $index">
+            {{creator.firstName}} {{creator.lastName}}, {{creator.creatorType}}.
+          </p>
+        </p>
+
+        <p class="zotero-type"  ng-bind="'Item type : '+item.data.itemType">Type of entry</p>
+
+        <div class="btn-group  inline-options-container">
+            <a target="blank"  class="zotero-url btn inline-option" ng-if="item.data.url" ng-href="{{item.data.url}}">
+              Check original link
+            </a>
+            <a class="zotero-url btn inline-option" target="blank" ng-href="{{item.links.alternate.href}}">
+              Check item on Zotero
+            </a>
+        </div>
+      </div>
+
+      <div
+        class="more-items"
+        ng-click="getMore()"
+        ng-show="overallItems.length > 0"
+      >
+        Fetch more items
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class=" row bottom-group">
+    <div
+      class="row selected-items-container animate-fast inline-options-container"
+      ng-show="selectedItems.length > 0"
+    >
+      <h3 class="inline-option">
+        {{selectedItems.length}} item<span ng-if="selectedItems.length > 1">s</span> selected for processing
+      </h3>
+      <span class="inline-option btn"
+      ng-click="clearAllSelected()">
+        <span class="glyphicon glyphicon-remove"></span>
+      </span>
+    </div>
+    <div class="selected-list-wrapper long-container">
+      <div class="selected-list-container consultable-container">
+        <div
+          class="zotero-item"
+          ng-repeat="item in selectedItems track by $index"
+          ng-click="removeFromSelected($index)"
+        >
+          <h4 class="zotero-title" ng-bind="item.data.title"></h4>
+        </div>
+      </div>
+    </div>
+    <!--<div class="row final-step inline-options-container">
+      <div class="inline-option">API key</div>
+      <form class="inline-option inline-options-container" ng-submit="changeAPIKey(apiKey)">
+        <input class="inline-option" type="text" placeholder="paste your api key here" ng-model="apiKey">
+        <input class="inline-option" type="submit">
+      </form>
+    </div>-->
+  </div>
+</div>
+<!-- END COLUMN 2 -->
+
+<!-- COLUMN 3 -->
+<div class="col-xs-4 column">
+  <div class="row step-header">
+    <h2><span class="step-number">3</span> export markdown</h2>
+  </div>
+  <div class="row long-container" fit-height>
+    <div
+      class="consultable-container"
+      marked="processedPreview"
+    >
+    </div>
+  </div>
+
+  <div class="row bottom-group">
+    <div
+      class="final-step btn-group"
+      ng-if="selectedItems.length > 0"
+    >
+      <div
+          class="btn"
+          ng-click="switchExportAsList()"
+      >
+          <span ng-if="!exportAsList">
+            Export entries as a one-file list
+          </span>
+          <span ng-if="exportAsList">
+            Export entries in seperate files
+          </span>
+      </div>
+      <div
+        class="btn"
+        clip-copy="copyToClipboard(selectedItems)"
+      >
+        Copy to clipboard
+      </div>
+      <div
+        class="btn"
+        ng-click="downloadItems(selectedItems)"
+      >
+        Download selection
+      </div>
+    </div>
+  </div>
+</div>
+<!-- END COLUMN 3 -->
+
+
+<div class="container alerts">
+      <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)" class="animate-fast">{{alert.msg}}</alert>
+
+</div>
