@@ -30,7 +30,95 @@ angular.module('zotermiteApp')
             lineNumbers: false,
             mode: 'markdown'
         };
+
+        //Interface;
+        $scope.asides = {
+          left : false,
+          right : false
+        }
+
+        $scope.templateChoose = true;
+        $scope.leftMenuMode = 'about';
     };
+
+    $scope.setLeftMenuContent = function(mode){
+      if(mode === 'about'){
+        return 'assets/html/menu-about.html';
+      } else if ( mode === 'syntax' ){
+        return 'assets/html/menu-syntax.html';
+      } else if ( mode === 'vocab' ){
+        return 'assets/html/menu-vocab.html';
+      }
+    }
+
+    $scope.toggleLeftMenuMode = function(val){
+      $scope.leftMenuMode = val;
+    }
+
+    $scope.toggleTemplateChoose = function(oneSide){
+      if(oneSide){
+        if(!$scope.templateChoose){
+          $scope.templateChoose = true;
+        }
+      }else{
+        $scope.templateChoose = !$scope.templateChoose;
+      }
+    }
+
+    $scope.toggleAside = function(side){
+      var otherSide = (side === 'left')?'right' : 'left';
+      $scope.asides[side] = !$scope.asides[side];
+      if($scope.asides[side]){
+        $scope.asides[otherSide] = false;
+      }
+
+
+      setTimeout(function(){
+        $scope.$apply();
+      })
+    }
+
+    $scope.setZoteroItemIcon = function(type){
+      switch(type){
+        case 'book':
+        return 'glyphicon-book';
+        break;
+
+        case 'bookSection':
+        return 'glyphicon-bookmark';
+        break;
+
+        case 'journalArticle':
+        return 'glyphicon-calendar';
+        break;
+
+        case 'thesis':
+        return 'glyphicon-education';
+        break;
+
+        case 'conferencePaper':
+        return 'glyphicon-comment';
+        break;
+
+        case 'webpage':
+        return 'glyphicon-globe';
+        break;
+
+        default:
+        return 'glyphicon-file';
+        break;
+      }
+    }
+
+    $scope.setBigContainerClass = function(){
+      var clas = '';
+      if($scope.asides.left){
+        clas += 'left';
+      } else if ( $scope.asides.right ){
+        clas += 'right';
+      }
+      return clas;
+    }
 
     var preparePreview = function(template, collection){
       var output = '';
@@ -38,11 +126,13 @@ angular.module('zotermiteApp')
       if(collection.length){
         for(var i in collection){
           var data = ZoteroTemplateParser.parseZoteroItemWithTemplate(template, collection[i]);
-         output += '\nFilename \n**************\n>'+data.filename + '.md\n**************\nContent\n**************\n'+data.body + '\n**************\n';
+         output += data.body + '\n\n';
+         // output += '\nFilename \n**************\n>'+data.filename + '.md\n**************\nContent\n**************\n'+data.body + '\n**************\n';
         }
       }else{
         var data = ZoteroTemplateParser.parseZoteroItemWithTemplate(template, collection);
-        output += 'Filename \n**************\n>'+data.filename + '.md\n**************\nContent\n**************\n'+data.body;
+        output += data.body;
+        // output += 'Filename \n**************\n>'+data.filename + '.md\n**************\nContent\n**************\n'+data.body;
       }
       return output;
     }
@@ -266,17 +356,22 @@ angular.module('zotermiteApp')
     }
 
     $scope.getTemplate = function(name){
+      console.log('getting new template ', name);
       $http
         .get('/api/templates/'+name)
         .success(function(template){
-          console.log('ok', template);
           $scope.loadedTemplate = template;
           $scope.activeTemplate = template.content;
+          $scope.templateChoose = false;
+
+          setTimeout(function(){
+            $scope.$apply();
+          })
         });
     }
 
     $scope.getTemplatesList();
-    $scope.getTemplate('fiche');
+    // $scope.getTemplate('fiche');
 
 
     initVariables();

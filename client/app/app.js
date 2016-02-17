@@ -7,7 +7,9 @@ angular.module('zotermiteApp', [
   'ngRoute',
   'ui.bootstrap',
   'hc.marked',
-  'ui.codemirror'
+  'ui.codemirror',
+  'angularFileUpload',
+  'angulike'
 ])
   .config(function ($routeProvider, $locationProvider, markedProvider) {
     $routeProvider

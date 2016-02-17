@@ -1,5 +1,3 @@
-$filename:begin$ $type$ - $creator_1_first_name$ $creator_1_last_name$ ($date$) - $title$ $filename:end$
-
 $title$, par $creators[0].firstName$ $creators[0].lastName$
 ===================
 
@@ -59,3 +57,6 @@ $zotero_url$
 ## Références et exemples à approfondir
 
 ## Notions et concepts à approfondir/définir
+
+
+$filename:begin$ $type$ - $creator_1_first_name$ $creator_1_last_name$ ($date$) - $title$ $filename:end$

@@ -117,7 +117,7 @@ angular.module('zotermiteApp')
     }
 
     var substituteLoopVals = function(input, expression, loopLength){
-      // console.log('expression : ', expression);
+      // fetching possible options
       var parts = expression.split(':');
       var options = {};
 
@@ -129,15 +129,17 @@ angular.module('zotermiteApp')
           options[components[0]] = components[1];
         }
       });
-      console.log('options : ', options);
       var r = /(.*)\s+in\s+(.*)/gi, match;
       while(match = r.exec(expression)){
         var val = match && match[1];
         var key = match && match[2];
         if(key){
           var output = '';
+          console.log(input);
           for(var i = 0 ; i < loopLength ; i++){
-            var line = input.replace(new RegExp(val, 'gi'), key + '[' + i + ']').trim();
+            var line = input
+                        .replace(new RegExp(val, 'gi'), key + '[' + i + ']')//substitute
+                        .trim();
 
             if(options.separator && i != loopLength - 1){
               line += options.separator;
@@ -236,6 +238,8 @@ angular.module('zotermiteApp')
                   activeStr = activeStr.replace(opening, '').replace(ending, '');
                   var newExpression = substituteLoopVals(content, val, loopLength);
                   activeStr = activeStr.replace(content, newExpression);
+                }else{
+                  activeStr = activeStr.replace(opening, '').replace(ending, '').replace(content, '');
                 }
             break;
 

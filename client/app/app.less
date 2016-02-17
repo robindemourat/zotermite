@@ -4,6 +4,14 @@
 @icon-font-path: '/bower_components/bootstrap/fonts/';
 @fa-font-path: '/bower_components/font-awesome/fonts';
 
+
+@gutter : 1em;
+
+@shortDuration : .1s;
+@mediumDuration : .5s;
+@longDuration : 1s;
+
+
 /**
  * App-wide Styles
  */
@@ -18,40 +26,58 @@ body{
   overflow : hidden;
 }
 
+.wrapper
+{
+  height : 100%;
+  width: 100%;
+  position : absolute;
+  overflow : hidden;
+}
 
 .big-container{
-  width : 100%!important;
+  width : 167%!important;
   padding: 0;
   position : absolute;
   margin: 0!important;
-  left: 0!important;
+  left: -33.333333333333333333333333333333%!important;
   height : 100%;
   overflow : hidden;
   top : 0;
 }
 
+.big-container.left
+{
+  left : 0!important;
+}
 
-.header .navbar-brand{
-  font-size : .8em;
-  text-transform : uppercase;
-  width : 100%;
-  text-align : center;
+.big-container.right
+{
+  left : -66.6666666666666666666666666666666666666666%!important;
 }
 
 .column{
+  display : inline-block;
+  width : 20%;
   height : 100%;
   overflow : hidden;
   margin : 0;
   padding : 0;
+  float : left;
+  position : relative;
 }
+
+// .column:last-child{
+//   width : 18%;
+// }
 
 .row{
   padding: 0 1em 0 1em;
 }
 
+/*
 .column:nth-child(odd){
   background : #e7e7e7;
-}
+}*/
 
 .row{
   width : 100%;
@@ -148,15 +174,44 @@ a:hover{
 
 .step-header{
   // border-bottom : 1px dashed #333;
-  padding : 1em 0 1em 0;
+  height : 6em;
   text-align : center;
   color : white;
   background : #333;
 }
 
-.step-header h2{
+.moving-header{
+  color : white;
+  background : #333;
+  position : absolute;
+  text-align : center;
+  height : 100%;
+  width : 100%;
+  left : 0;
+  top : 0;
+}
+
+.moving-header.minified
+{
+  height : 6em;
+  cursor : pointer;
+}
+
+.moving-header.minified:hover{
+  color : darkgrey;
+  background : green;
+}
+
+
+.moving-header h2{
   font-size: 1em;
   text-transform: uppercase;
+  padding-top : 1em;
+}
+
+.moving-header h2.big{
+  font-size : 1.5em;
+  padding-top : 0;
 }
 
 .inline-options-container{
@@ -180,22 +235,45 @@ form.inline-option{
   bottom: 0;
   left: 0;
   position : absolute;
+  width :100%;
+  padding : 0;
+}
+
+.btn-group.flexed
+{
+  display : flex;
+  padding : 0;
+  background : #333;
 }
 
 .final-step{
   display : flex;
-  padding : 1em 0 1em 0;
+  padding : 0;
+  background : #333;
 }
 
-.final-step.btn-group .btn{
+.bottom-group .btn-group .btn{
   flex-grow : 1;
-  margin-right : 1em;
-  background: #e7e7e7;
-  border-radius : .5em;
+  background: #333;
+  color : white;
+  text-transform : uppercase;
+  padding : 1em;
 }
 
-.final-step.btn-group .btn:last-child{
-  margin-right : 0;
+.bottom-group .btn-group .btn.active
+{
+  background : brown;
+}
+
+.bottom-group .btn-group .btn:hover
+{
+  background : grey;
+  color : white;
+}
+
+.bottom-group .btn-group .btn span::before
+{
+  margin-right : 1em;
 }
 
 textarea{
@@ -234,7 +312,53 @@ FUN FUN FUN
   color : white;
   border-radius : 50%;
   padding : .5em .8em .5em .8em;
-  margin-right : 2em;
+  margin-right : 1em;
+  font-size : 1em;
+}
+
+/*
+Templates selector
+*/
+
+ul.templates-list
+{
+  background : white;
+  width : 50%;
+  margin : 0;
+  padding : 0;
+  margin-left : 25%;
+  max-height : 25%;
+  overflow-y : auto;
+}
+
+.templates-list li.template
+{
+  list-style-type : none;
+  cursor : pointer;
+  margin : 0;
+  margin-bottom : .5em;
+  background : lightgrey;
+  color : black;
+  text-transform : uppercase;
+  padding : 1em;
+}
+
+.templates-list li.template.active
+{
+  color : white;
+  background : brown;
+}
+
+.templates-list li.template:hover
+{
+  color : white;
+  background : darkgrey;
+}
+
+
+#templating-help
+{
+  z-index : 10;
 }
 
 /*
@@ -250,17 +374,58 @@ FUN FUN FUN
 .zotero-item {
   background: #e7e7e7;
   padding : .2em 1em .2em 1em;
-  margin-bottom : .2em;
+  margin-bottom : .5em;
   cursor : pointer;
+  position : relative;
 }
 
 .zotero-item h4{
   font-size : 1em;
 }
 
+.zotero-item .zotero-item-primary-information,
+.zotero-item .zotero-item-additional-information
+{
+  padding-left : 2em;
+}
+
+
+.zotero-item .zotero-item-additional-information
+{
+  max-height : 0;
+  opacity : 0;
+}
+
+.zotero-item:hover .zotero-item-additional-information
+{
+  margin : 2em 0 2em 0;
+  max-height : 200px;
+  opacity : 1;
+}
+
+.zotero-item .add-sign
+{
+  position : absolute;
+  right : 2em;
+  top : 45%;
+  opacity : 0;
+}
+
+.zotero-item:hover .add-sign
+{
+  opacity : 1;
+}
+
 .zotero-item p{
   margin : 0;
   font-size : .8em;
+}
+
+.zotero-item .item-icon
+{
+  position : absolute;
+  left : 1em;
+  top : 1em;
 }
 
 .results-display-container .more-items{
@@ -287,7 +452,7 @@ FUN FUN FUN
 */
 
 .selected-items-container{
-  background: #666666;
+  background: brown;
   color: white;
 }
 
@@ -299,14 +464,35 @@ FUN FUN FUN
 .selected-list-container .zotero-item{
   background: #333333;
   color : white;
+  margin : 0;
 }
 
 .selected-list-wrapper{
+  border-bottom : 2px solid white;
   max-height : 10em;
 }
 .selected-list-container{
   /*overflow-y : auto;*/
 }
+
+.zotero-item:hover{
+  background : darkgrey;
+}
+
+.zotero-item:hover .confirm,
+.zotero-item .remove
+{
+  display : none;
+  opacity : 0;
+}
+
+.zotero-item:hover .remove,
+.zotero-item .confirm
+{
+  opacity : 1;
+  display : inline;
+}
+
 
 .alerts{
   text-align : center;
@@ -320,7 +506,162 @@ alert{
 }
 
 
+/*
+===========================
+GENERIC COMPONENTS
+==========================
+*/
 
+.guttered
+{
+  padding : @gutter;
+}
+
+.btn{
+  cursor : pointer;
+}
+
+.absolute-top-left,
+.absolute-top-right,
+.absolute-bottom-left,
+.absolute-bottom-right
+{
+  position : fixed;
+}
+
+.absolute-top-left,
+.absolute-top-right
+{
+  top : @gutter;
+}
+
+.absolute-bottom-left,
+.absolute-bottom-right
+{
+  bottom : @gutter;
+}
+
+.absolute-top-left,
+.absolute-bottom-left
+{
+  left : 0;
+  padding-left : @gutter;
+}
+
+.absolute-top-right,
+.absolute-bottom-right
+{
+  right : 0;
+  padding-right : @gutter;
+}
+
+.left .absolute-top-left,
+.left .absolute-bottom-left
+{
+  left : 33.33333333333333333%;
+}
+
+.right .absolute-top-right,
+.right .absolute-bottom-right
+{
+  right : 33.33333333333333333333%;
+}
+
+
+.mini-icon
+{
+  -webkit-transform: scale(.4);
+  -moz-transform: scale(.4);
+  -o-transform: scale(.4);
+  transform: scale(.4);
+}
+
+.mini-icon:hover
+{
+  -webkit-transform: scale(.7);
+  -moz-transform: scale(.7);
+  -o-transform: scale(.7);
+  transform: scale(.7);
+}
+
+.nav-icon {
+  width: 60px;
+  height: 45px;
+  position: relative;
+  margin: 0 auto;
+  -webkit-transform: rotate(0deg);
+  -moz-transform: rotate(0deg);
+  -o-transform: rotate(0deg);
+  transform: rotate(0deg);
+  -webkit-transition: .5s ease-in-out;
+  -moz-transition: .5s ease-in-out;
+  -o-transition: .5s ease-in-out;
+  transition: .5s ease-in-out;
+  cursor: pointer;
+}
+
+.nav-icon span {
+  display: block;
+  position: absolute;
+  height: 4px;
+  width: 100%;
+  background: white;
+  border-radius: 9px;
+  opacity: 1;
+  left: 0;
+  -webkit-transform: rotate(0deg);
+  -moz-transform: rotate(0deg);
+  -o-transform: rotate(0deg);
+  transform: rotate(0deg);
+  -webkit-transition: .25s ease-in-out;
+  -moz-transition: .25s ease-in-out;
+  -o-transition: .25s ease-in-out;
+  transition: .25s ease-in-out;
+}
+
+.nav-icon span:nth-child(1) {
+  top: 0px;
+}
+
+.nav-icon span:nth-child(2) {
+  top: 18px;
+}
+
+.nav-icon span:nth-child(3) {
+  top: 36px;
+}
+
+.nav-icon.open span:nth-child(1) {
+  top: 18px;
+  -webkit-transform: rotate(135deg);
+  -moz-transform: rotate(135deg);
+  -o-transform: rotate(135deg);
+  transform: rotate(135deg);
+}
+
+.nav-icon.open span:nth-child(2) {
+  opacity: 0;
+  left: -60px;
+}
+
+.nav-icon.open span:nth-child(3) {
+  top: 18px;
+  -webkit-transform: rotate(-135deg);
+  -moz-transform: rotate(-135deg);
+  -o-transform: rotate(-135deg);
+  transform: rotate(-135deg);
+}
+
+
+/*
+=============================
+SPECIFIC COMPONENTS
+==============================
+*/
+
+.introduction{
+  margin-top : 40%;
+}
 
 /*
 Markdown editor
@@ -376,6 +717,59 @@ Markdown editor
   color : brown;
 }
 
+
+/*
+================
+ANIMATIONS
+================
+*/
+
+
+.animate-medium
+{
+    -webkit-transition: all @mediumDuration ease;
+            transition: all @mediumDuration ease;
+}
+
+
+/*
+vary height
+*/
+.slide-height
+{
+    overflow-y: hidden;
+
+    max-height: Infinity;
+
+    -webkit-transition: all .5s ease;
+       -moz-transition: all .5s ease;
+        -ms-transition: all .5s ease;
+         -o-transition: all .5s ease;
+}
+
+.slide-height.ng-enter,
+.slide-height.ng-show
+{
+    max-height: 0;
+}
+
+.slide-height.ng-enter-active,
+.slide-height.ng-show-add
+{
+    max-height: Infinity;
+}
+
+.slide-height.ng-leave,
+.slide-height.ng-hide
+{
+    max-height: Infinity;
+}
+
+.slide-height.ng-leave-active,
+.slide-height.ng-hide-add
+{
+    max-height: 0;
+}
 
 
 
