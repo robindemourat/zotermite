@@ -96,7 +96,9 @@
         <h2
           class="animate-medium"
           ng-class="{'big':templateChoose}"
-        ><span class="step-number">1</span> Set up a zotero-to-markdown template
+        ><span class="step-number">1</span>
+          <span ng-bind="(templateChoose)?'Setup a zotero-to-markdown template':'Edit your template'"></span>
+
         </h2>
         <div
         ng-if="templateChoose"
@@ -440,8 +442,8 @@
     </div>
 
 
-    <span class="absolute-top-right animate-medium" ng-click="toggleAside('right')" style="color:white">
-      <span class="glyphicon glyphicon-cog"></span>
+    <span class="absolute-top-right animate-medium mini-icon options-btn" ng-click="toggleAside('right')" ng-class="{'active':asides.right}">
+      <span class="glyphicon glyphicon-cog animate-medium"></span>
     </span>
   </div>
   <!-- END COLUMN 3 -->
