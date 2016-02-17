@@ -2,27 +2,33 @@
 
 
 angular.module('zotermiteApp')
-  .controller('MainCtrl', function ($scope, $log, $http, $timeout, ZoteroQueryHandler, ZoteroQueryBuilder, ZoteroTemplateParser, FileDownload, codemirrorMarkdown) {
+  .controller('MainCtrl', function ($scope, $cookieStore, $log, $http, $timeout, ZoteroQueryHandler, ZoteroQueryBuilder, ZoteroTemplateParser, FileDownload, codemirrorMarkdown) {
     var query;
 
     var initVariables = function(){
-      $http.get('assets/default-credentials/zotero-credentials.json')
-        .success(function(credentials){
-          $scope.userId = credentials.userId;
-          $scope.apiKey = credentials.apiKey;
-        }).error(function(){
-            $scope.userId = 1142649;
-            $scope.apiKey = '';
-            $log.error('credentials not found. Write them in root/credentials/credentials.json with an object containing properties userId and apiKey, or paste your API in the interface.')
-        }).then(function(){
-            query = ZoteroQueryBuilder.init($scope.apiKey, $scope.userId).searchItemType('-attachment');
-            $scope.overallItems = [];
-            $scope.selectedItems = [];
-            $scope.expo$rtAsList = false;
-            $scope.overallQueryStart = 0;
-            $scope.getMore();
-            $scope.alerts = [];
-        });
+
+      $scope.overallItems = [];
+      $scope.selectedItems = [];
+      $scope.exportAsList = false;
+
+      $scope.inputAPIkey = "";
+      $scope.inputUserId = "";
+
+
+      var retrievedUserId = $cookieStore.get('zoteroUserId');
+      var retrievedAPIkey = $cookieStore.get('zoteroAPIkey');
+
+      $scope.connectingZotero = true;
+
+      if(retrievedUserId && retrievedAPIkey){
+        $scope.userId = retrievedUserId;
+        $scope.apiKey = retrievedAPIkey;
+        $scope.rememberCredentials = true;
+        $scope.setZoteroCredentials($scope.apiKey, $scope.userId);
+      }else{
+        $scope.rememberCredentials = false;
+      }
+
 
       //markdown-template editor
        $scope.editorOptions = {
@@ -48,7 +54,52 @@ angular.module('zotermiteApp')
         return 'assets/html/menu-syntax.html';
       } else if ( mode === 'vocab' ){
         return 'assets/html/menu-vocab.html';
+      } else if ( mode === 'connect'){
+        return 'assets/html/menu-help-connect.html';
       }
+    }
+
+    $scope.setZoteroCredentials = function(apiKey, userId){
+      if(apiKey.length === 0 || !userId.length === 0){
+        return;
+      }
+      $scope.connectingZotero = true;
+      $scope.zoteroPending = true;
+      $scope.zoteroStatus = 'Connecting to zotero ...';
+      query = ZoteroQueryBuilder.init(apiKey, userId).searchItemType('-attachment');
+      $scope.overallQueryStart = 0;
+      $scope.getMore(function(err, data){
+        $scope.zoteroPending = false;
+        $scope.zoteroStatus = undefined;
+        if(err){
+          $scope.zoteroStatus = 'Could not connect to Zotero : '+err;
+        }else{
+          $scope.userId = userId;
+          $scope.apiKey = apiKey;
+          if($scope.rememberCredentials){
+            $cookieStore.put('zoteroUserId', userId);
+            $cookieStore.put('zoteroAPIkey', apiKey);
+          }else{
+            $cookieStore.remove('zoteroUserId');
+            $cookieStore.remove('zoteroAPIkey');
+          }
+
+          $scope.alerts = [];
+          $scope.connectingZotero = false;
+          setTimeout(function(){
+            $scope.$apply();
+          })
+        }
+      });
+    }
+
+    $scope.setDefaultZoteroCredentials = function(){
+      $http.get('assets/default-credentials/zotero-credentials.json')
+        .success(function(credentials){
+          $scope.setZoteroCredentials(credentials.apiKey, credentials.userId);
+        }).error(function(){
+            $log.error('credentials not found. Write them in root/credentials/credentials.json with an object containing properties userId and apiKey, or paste your API in the interface.')
+        });
     }
 
     $scope.toggleLeftMenuMode = function(val){
@@ -65,6 +116,14 @@ angular.module('zotermiteApp')
       }
     }
 
+    $scope.toggleZoteroConnect = function(){
+      if($scope.connectingZotero && $scope.apiKey && $scope.userId){
+        $scope.connectingZotero = false;
+      }else if(!$scope.connectingZotero){
+        $scope.connectingZotero = !$scope.connectingZotero;
+      }
+    }
+
     $scope.toggleAside = function(side){
       var otherSide = (side === 'left')?'right' : 'left';
       $scope.asides[side] = !$scope.asides[side];
@@ -75,7 +134,7 @@ angular.module('zotermiteApp')
 
       setTimeout(function(){
         $scope.$apply();
-      })
+      });
     }
 
     $scope.setZoteroItemIcon = function(type){
@@ -173,7 +232,8 @@ angular.module('zotermiteApp')
       }
     };
 
-    var appendToListOfItems = function(d){
+    var appendToListOfItems = function(err, d){
+      $scope.zoteroPending = false;
       for(var i in d){
         var item = d[i];
         if(!itemExists(item, $scope.overallItems))
@@ -181,7 +241,8 @@ angular.module('zotermiteApp')
       }
     }
 
-    var prependToListOfItems = function(d){
+    var prependToListOfItems = function(err, d){
+      $scope.zoteroPending = false;
       for(var i in d){
         var item = d[i];
         if(!itemExists(item, $scope.overallItems)){
@@ -206,15 +267,25 @@ angular.module('zotermiteApp')
       $scope.selectedItems = [];
     }
 
-    $scope.getMore = function(){
+    $scope.getMore = function(callback){
+      $scope.zoteroPending = true;
+
       if($scope.searchQuery){
-        if($scope.searchQuery.length == 0)
+        if($scope.searchQuery.length == 0){
           query.quickSearch(null);
-        else $scope.newZoteroQuery($scope.searchQuery);
+        }
+        else{
+          $scope.newZoteroQuery($scope.searchQuery);
+        }
       }
 
       query.start($scope.overallQueryStart);
-      ZoteroQueryHandler.getItems(query.get(), appendToListOfItems);
+      ZoteroQueryHandler.getItems(query.get(), function(err, data){
+        if(data){
+          appendToListOfItems(err, data);
+        }
+        callback(err, data);
+      });
       $scope.overallQueryStart += 100;
     };
 
@@ -266,11 +337,12 @@ angular.module('zotermiteApp')
       else return true;
     };
 
-    $scope.newZoteroQuery = function(expression){
+    $scope.newZoteroQuery = function(expression, callback){
+      $scope.zoteroPending = true;
       query.quickSearch(expression).start(0);
       $log.info('new query to zotero', expression);
       ZoteroQueryHandler.getItems(query.get(), prependToListOfItems);
-      $scope.addAlert('', 'fetching items in zotero, please wait')
+      // $scope.addAlert('', 'fetching items in zotero, please wait')
     };
 
     $scope.changeAPIKey = function(apiKey){
@@ -303,8 +375,8 @@ angular.module('zotermiteApp')
           var item = items[i];
           var output = ZoteroTemplateParser.parseZoteroItemWithTemplate($scope.activeTemplate, item);
           $timeout(function(){
-              $log.info('downloading file'+output.filename+'.md');
-              downloadFile(output.body, output.filename+'.md')
+              $log.info('downloading file'+output.filename);
+              downloadFile(output.body, output.filename)
           }, i*5000);
         }
       }
@@ -312,6 +384,7 @@ angular.module('zotermiteApp')
 
     $scope.copyToClipboard = function(items){
       var output = "";
+      console.info('copying items to clipboard ', items);
       if($scope.exportAsList){
         for(var i in items){
           output += ZoteroTemplateParser.parseZoteroItemWithTemplate($scope.activeTemplate, items[i]).body + '\n\n';
@@ -320,7 +393,6 @@ angular.module('zotermiteApp')
         output += ZoteroTemplateParser.parseZoteroItemWithTemplate($scope.activeTemplate, items[0]).body;
       }
 
-      $scope.addAlert('success','Processed result copied to clipboard');
       $log.info('processed result copied to clipboard');
       return output;
     };

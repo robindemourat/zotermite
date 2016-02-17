@@ -84,17 +84,17 @@
 
 
     <div
-      class="moving-header animate-medium"
+      class="moving-header toggable animate-medium"
       ng-class="{'minified' : !templateChoose}"
+      ng-click="toggleTemplateChoose(true)"
     >
 
       <div class="animate-medium"
-        ng-style="{'marginTop':(templateChoose)?'40%':'0'}"
+        ng-style="{'marginTop':(templateChoose)?'50%':'0'}"
       >
         <h2
           class="animate-medium"
           ng-class="{'big':templateChoose}"
-          ng-click="toggleTemplateChoose(true)"
         ><span class="step-number">1</span> Set up a zotero-to-markdown template
         </h2>
         <div
@@ -121,7 +121,7 @@
 
 
       </div>
-    </div>
+    </div><!--end moving-header-->
 
 
     <span class="absolute-top-left animate-medium mini-icon" ng-click="toggleAside('left')" style="color:white">
@@ -141,19 +141,18 @@
   <!-- COLUMN 2 -->
   <div class="column">
     <div class="row step-header">
-      <h2>
-      <span class="step-number">2</span> Select reference(s) in your zotero library</h2>
     </div>
 
     <div class="row selectors-container inline-options-container">
       <form class="inline-option inline-option-big inline-options-container animate" ng-submit="newZoteroQuery(searchQuery)">
+        <span class="zotero-searching glyphicon glyphicon-upload animate-medium" ng-if="zoteroPending"></span>
         <input class="inline-option inline-option-big" type="text" placeholder="query your zotero library" ng-model="searchQuery">
-        <input class="inline-option" type="submit">
+        <input ng-if="!zoteroPending" class="inline-option" type="submit">
       </form>
       <div
         class="inline-option btn animate"
         ng-click="addAllMatching()"
-        ng-show="overallItems.length > 0"
+        ng-show="overallItems.length > 0 && !zoteroPending"
       >
         Select all
       </div>
@@ -200,11 +199,97 @@
           class="more-items"
           ng-click="getMore()"
           ng-show="overallItems.length > 0"
+          ng-bind="(zoteroPending)?'loading':'Fetch more items'"
         >
-          Fetch more items
         </div>
       </div>
     </div>
+
+    <div
+      class="moving-header toggable animate-medium"
+      ng-class="{'minified' : !connectingZotero}"
+    >
+
+      <div class="animate-medium"
+        ng-style="{'marginTop':(connectingZotero)?'50%':'0'}"
+      >
+        <h2
+          class="animate-medium"
+          ng-click="toggleZoteroConnect()"
+          ng-class="{'big':connectingZotero}"
+        ><span class="step-number">2</span>
+        <span ng-bind="(!connectingZotero)?'Select bibliographic references':'Connect to zotero'"></span>
+        </h2>
+        <div
+        ng-if="connectingZotero"
+        >
+          <p class="connect-choice animate-medium"
+            ng-if="!zoteroPending"
+          >Connect to your zotero account</p>
+
+          <form
+            class="connect-interface"
+            ng-submit="setZoteroCredentials(inputAPIkey, inputUserId)"
+            ng-if="!zoteroPending"
+          >
+
+            <div class="input-group input-group-lg">
+              <span class="input-group-addon" id="sizing-addon1">Input your API key</span>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="API key"
+                aria-describedby="sizing-addon1"
+                ng-model="inputAPIkey"
+              >
+            </div>
+
+            <div class="input-group input-group-lg">
+              <span class="input-group-addon" id="sizing-addon1">Input your user Id</span>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="user Id"
+                aria-describedby="sizing-addon1"
+                ng-model="inputUserId"
+              >
+            </div>
+
+            <button
+              type="submit"
+              ng-if="inputAPIkey.length && inputUserId.length"
+              class="btn"
+            >Connect !</button>
+          </form>
+
+          <div  class="connect-options" ng-if="!zoteroPending">
+            <div class="input-group">
+              <span class="input-group-addon">
+                <input ng-model="rememberCredentials" type="checkbox" aria-label="...">
+              </span>
+              <p>Remember my credentials next time</p>
+            </div><!-- /input-group -->
+            <p
+              ng-click="toggleLeftMenuMode('connect');$event.stopPropagation();toggleAside('left')"
+              class="help"
+            ><span class="glyphicon glyphicon-question-sign" style="margin-right:1em"></span>Where do I find that ?</p>
+          </div>
+
+
+
+
+
+          <p class="connect-choice connect-to-default animate-medium" ng-click="setDefaultZoteroCredentials()" ng-if="!zoteroPending">Or connect to an example zotero account</p>
+
+          <p
+            ng-if="zoteroStatus"
+            ng-bind="zoteroStatus"
+          ></p>
+        </div>
+
+
+      </div>
+    </div><!--end moving-header-->
 
 
 
@@ -224,10 +309,7 @@
   <!-- COLUMN 3 -->
   <div class="column">
     <div class="row step-header">
-      <h2>
-      <span class="step-number">3</span>
-      export markdown
-      </h2>
+
     </div>
     <div class="row long-container" fit-height>
       <div
@@ -243,14 +325,15 @@
         ng-show="selectedItems.length > 0"
       >
         <h3 class="inline-option">
+          <span class="glyphicon glyphicon-remove" ng-click="clearAllSelected()" style="cursor:pointer">
           {{selectedItems.length}} item<span ng-if="selectedItems.length > 1">s</span> selected for processing
+
         </h3>
-        <span class="inline-option btn"
-        ng-click="clearAllSelected()">
+
         </span>
       </div>
       <div class="selected-list-wrapper long-container">
-        <div class="selected-list-container consultable-container animate-medium">
+        <div class="selected-list-container animate-medium">
           <div
             class="zotero-item slide-height"
             ng-repeat="item in selectedItems track by $index"
@@ -281,6 +364,7 @@
         </div>-->
         <div
           class="btn animate-medium"
+          clip-click="copyToClipboard(selectedItems)"
           clip-copy="copyToClipboard(selectedItems)"
         >
           <span class="glyphicon glyphicon-cloud-upload">Copy</span>
@@ -291,6 +375,63 @@
         >
           <span class="glyphicon glyphicon-download">Download</span>
         </div>
+      </div>
+    </div>
+
+    <div
+      class="moving-header animate-medium"
+      ng-class="{'minified' : userId && apiKey && activeTemplate && selectedItems.length}"
+    >
+
+      <div class="animate-medium"
+        ng-style="{'marginTop':(!userId || !apiKey || !activeTemplate || !selectedItems.length)?'50%':'0'}"
+      >
+
+        <h2
+          class="animate-medium"
+          ng-class="{'big':!userId || !apiKey || !activeTemplate || !selectedItems.length}"
+        >
+        <span class="step-number">3</span>
+        export markdown
+        </h2>
+        <div
+        ng-if="connectingZotero || !activeTemplate || !selectedItems.length"
+        >
+          <p>
+            <span ng-if="!activeTemplate">
+              <span class="glyphicon glyphicon-arrow-left" style="margin-right:1em"></span>
+              Select a template on the left column
+            </span>
+
+            <span ng-if="activeTemplate">
+              <span class="glyphicon glyphicon-ok" style="margin-right:1em"></span>
+              Template selected
+            </span>
+          </p>
+
+          <p>
+            <span ng-if="connectingZotero">
+              <span class="glyphicon glyphicon-arrow-left" style="margin-right:1em"></span>
+              Connect to a zotero account on the middle column
+            </span>
+            <span ng-if="!connectingZotero">
+              <span class="glyphicon glyphicon-ok" style="margin-right:1em"></span>
+              Connected to zotero
+            </span>
+          </p>
+          <p>
+            <span ng-if="!selectedItems.length">
+              <span class="glyphicon glyphicon-arrow-left" style="margin-right:1em"></span>Select bibliographic items on the middle column</p>
+            </span>
+
+            <span ng-if="selectedItems.length">
+              <span class="glyphicon glyphicon-ok" style="margin-right:1em"></span>
+              Items ready to be processed
+            </span>
+
+        </div>
+
+
       </div>
     </div>
 

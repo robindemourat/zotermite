@@ -12,9 +12,10 @@ angular.module('zotermiteApp')
     $http
       .get(query)
       .success(function(d){
-        return callback(d);
+        return callback(undefined, d);
       })
       .error(function(e){
+        return callback(e, undefined);
         console.error('HTTP error :', e);
       });
     };
@@ -69,113 +70,113 @@ angular.module('zotermiteApp')
     //CALLABLE FUNCTIONS
     factory.getItems = function(params, callback){
       var query = buildQuery(params, 'items');
-      getResults(query, function(d){
-        return callback(d);
+      getResults(query, function(err, d){
+        return callback(err, d);
       });
     };
 
     factory.getTopItems = function(params, callback){
       var query = buildQuery(params, 'items', 'top');
-      getResults(query, function(d){
-        return callback(d);
+      getResults(query, function(err, d){
+        return callback(err, d);
       });
     };
 
     factory.getTrashedItems = function(params, callback){
       var query = buildQuery(params, 'items', 'trash');
-      getResults(query, function(d){
-        return callback(d);
+      getResults(query, function(err, d){
+        return callback(err, d);
       });
     };
 
     factory.getSpecificItem = function(params, key, callback){
       var query = buildQuery(params, 'items', undefined, key);
-      getResults(query, function(d){
-        return callback(d);
+      getResults(query, function(err, d){
+        return callback(err, d);
       });
     };
 
     factory.getItemChildren = function(params, key, callback){
       var query = buildQuery(params, 'items', 'children', key);
-      getResults(query, function(d){
-        return callback(d);
+      getResults(query, function(err, d){
+        return callback(err, d);
       });
     };
 
     factory.getItemTags = function(params, key, callback){
       var query = buildQuery(params, 'items', 'tags', key);
-      getResults(query, function(d){
-        return callback(d);
+      getResults(query, function(err, d){
+        return callback(err, d);
       });
     };
 
     factory.getTags = function(params, callback){
       var query = buildQuery(params, 'tags');
       getResults(query, function(d){
-        return callback(d);
+        return callback(err, d);
       });
     };
 
     factory.searchTags = function(params, query, callback){
       var query = buildQuery(params, encodeURIComponent(query), 'tags');
-      getResults(query, function(d){
-        return callback(d);
+      getResults(query, function(err, d){
+        return callback(err, d);
       });
     };
 
     factory.getCollections = function(params, callback){
       var query = buildQuery(params, 'collections');
-      getResults(query, function(d){
-        return callback(d);
+      getResults(query, function(err, d){
+        return callback(err, d);
       });
     };
 
     factory.getTopCollections = function(params, callback){
       var query = buildQuery(params, 'collections', 'top');
-      getResults(query, function(d){
-        return callback(d);
+      getResults(query, function(err, d){
+        return callback(err, d);
       });
     };
 
     factory.getSpecificCollection = function(params, key, callback){
       var query = buildQuery(params, 'collections', undefined, key);
-      getResults(query, function(d){
-        return callback(d);
+      getResults(query, function(err, d){
+        return callback(err, d);
       });
     };
 
     factory.getCollectionChildrenCollections = function(params, key, callback){
       var query = buildQuery(params, 'collections', 'collections', key);
-      getResults(query, function(d){
-        return callback(d);
+      getResults(query, function(err, d){
+        return callback(err, d);
       });
     };
 
     factory.getCollectionItems = function(params, key, callback){
       var query = buildQuery(params, 'collections', 'items', key);
-      getResults(query, function(d){
-        return callback(d);
+      getResults(query, function(err, d){
+        return callback(err, d);
       });
     };
 
     factory.getCollectionTags = function(params, key, callback){
       var query = buildQuery(params, 'collections', 'tags', key);
-      getResults(query, function(d){
-        return callback(d);
+      getResults(query, function(err, d){
+        return callback(err, d);
       });
     };
 
     factory.getSearches = function(params, callback){
       var query = buildQuery(params, 'searches');
-      getResults(query, function(d){
-        return callback(d);
+      getResults(query, function(err, d){
+        return callback(err, d);
       });
     };
 
     factory.getSpecificSearch = function(params, key, callback){
       var query = buildQuery(params, 'searches', undefined, key);
-      getResults(query, function(d){
-        return callback(d);
+      getResults(query, function(err, d){
+        return callback(err, d);
       });
     };
 

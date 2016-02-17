@@ -135,7 +135,6 @@ angular.module('zotermiteApp')
         var key = match && match[2];
         if(key){
           var output = '';
-          console.log(input);
           for(var i = 0 ; i < loopLength ; i++){
             var line = input
                         .replace(new RegExp(val, 'gi'), key + '[' + i + ']')//substitute

@@ -166,6 +166,8 @@ a:hover{
 .consultable-container{
   overflow-y : auto;
   height : 100%;
+  padding-top : 2em;
+  padding-bottom : 2em;
 }
 
 .CodeMirror {
@@ -194,10 +196,10 @@ a:hover{
 .moving-header.minified
 {
   height : 6em;
-  cursor : pointer;
 }
 
-.moving-header.minified:hover{
+.moving-header.toggable.minified:hover{
+  cursor : pointer;
   color : darkgrey;
   background : green;
 }
@@ -212,6 +214,7 @@ a:hover{
 .moving-header h2.big{
   font-size : 1.5em;
   padding-top : 0;
+  margin-bottom : 2em;
 }
 
 .inline-options-container{
@@ -336,8 +339,8 @@ ul.templates-list
   list-style-type : none;
   cursor : pointer;
   margin : 0;
-  margin-bottom : .5em;
   background : lightgrey;
+  border-bottom : 1px solid darkgrey;
   color : black;
   text-transform : uppercase;
   padding : 1em;
@@ -365,9 +368,98 @@ ul.templates-list
 2 - selectors (input, possible filters, ...)
 */
 .selectors-container{
-  padding-bottom : 1em;
+  padding : 1em;
 }
 
+.selectors-container .zotero-searching{
+  margin-right : 3em;
+}
+
+
+/*
+zotero-related interface
+*/
+
+.connect-choice,
+.connect-interface
+{
+ margin : 0 25% 2em 25%;
+}
+
+
+.connect-choice
+{
+  padding : 1em;
+}
+
+.connect-choice,
+.connect-interface .btn
+{
+  text-transform : uppercase;
+  text-align : center;
+  background : grey;
+}
+
+.connect-to-default:hover,
+.connect-interface .btn:hover
+{
+  cursor : pointer;
+  background : darkgrey;
+}
+
+.connect-interface
+{
+  text-align : left;
+}
+
+.connect-interface .input-group
+{
+  border : none!important;
+  border-radius : 0!important;
+  padding-bottom : .5em;
+  background : inherit;
+}
+
+.connect-interface span,
+.connect-interface input,
+.connect-option span,
+.connect-options input
+{
+  border-radius : 0!important;
+  border : none;
+}
+
+.connect-interface .input-group-addon,
+.connect-options .input-group-addon
+{
+  background : inherit;
+  color : white;
+  padding-left : 0;
+  text-transform : uppercase;
+  font-size : .7em;
+  border : none!important;
+}
+
+.connect-interface .btn{
+  border-radius : 0!important;
+  display : block;
+  width : 100%;
+  margin-top : 1em;
+}
+
+.connect-options{
+  margin : 0 25% 2em 25%;
+  text-align : left;
+}
+
+.connect-options .help{
+  cursor : pointer;
+}
+
+.connect-options .help:hover
+{
+  text-decoration : underline;
+}
 /*
 2 - zotero items
 */
@@ -428,6 +520,7 @@ ul.templates-list
   top : 1em;
 }
 
+
 .results-display-container .more-items{
   background: #e7e7e7;
   text-align: center;
@@ -435,6 +528,11 @@ ul.templates-list
   font-weight : 800;
   padding : 1em;
   cursor : pointer;
+}
+
+.results-display-container .more-items:hover
+{
+  background : darkgrey;
 }
 
 .zotero-item .btn-group{
