@@ -6,6 +6,7 @@
       ng-switch="leftMenuMode"
   >
     <div
+      class="menu-wrapper"
       ng-include="setLeftMenuContent(leftMenuMode)"
     ></div>
 
@@ -218,7 +219,10 @@
           ng-click="toggleZoteroConnect()"
           ng-class="{'big':connectingZotero}"
         ><span class="step-number">2</span>
-        <span ng-bind="(!connectingZotero)?'Select bibliographic references':'Connect to zotero'"></span>
+        <span>
+          <span ng-bind="(!connectingZotero)?'Select bibliographic references':'Connect to zotero'"></span>
+          <span ng-click="connectingZotero = false" ng-if="connectingZotero && userId && apiKey && overallItems.length" class="glyphicon glyphicon-remove" style="cursor:pointer"></span>
+        </span>
         </h2>
         <div
         ng-if="connectingZotero"

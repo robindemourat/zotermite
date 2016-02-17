@@ -23,6 +23,8 @@ angular.module('zotermiteApp')
       if(retrievedUserId && retrievedAPIkey){
         $scope.userId = retrievedUserId;
         $scope.apiKey = retrievedAPIkey;
+        $scope.inputUserId = $scope.userId;
+        $scope.inputAPIkey = $scope.apiKey;
         $scope.rememberCredentials = true;
         $scope.setZoteroCredentials($scope.apiKey, $scope.userId);
       }else{
@@ -71,6 +73,10 @@ angular.module('zotermiteApp')
       if(apiKey.length === 0 || !userId.length === 0){
         return;
       }
+      if($scope.userId === userId && $scope.apiKey === apiKey && $scope.overallItems.length){
+        $scope.connectingZotero = false;
+        return;
+      }
       $scope.connectingZotero = true;
       $scope.zoteroPending = true;
       $scope.zoteroStatus = 'Connecting to zotero ...';
@@ -84,6 +90,8 @@ angular.module('zotermiteApp')
         }else{
           $scope.userId = userId;
           $scope.apiKey = apiKey;
+          $scope.inputUserId = userId;
+          $scope.inputAPIkey = apiKey;
           if($scope.rememberCredentials){
             $cookieStore.put('zoteroUserId', userId);
             $cookieStore.put('zoteroAPIkey', apiKey);
@@ -438,7 +446,6 @@ angular.module('zotermiteApp')
     }
 
     $scope.getTemplate = function(name){
-      console.log('getting new template ', name);
       $http
         .get('/api/templates/'+name)
         .success(function(template){

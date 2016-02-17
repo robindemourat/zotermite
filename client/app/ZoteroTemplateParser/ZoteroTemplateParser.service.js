@@ -203,7 +203,7 @@ angular.module('zotermiteApp')
                   var newExpression = substituteLoopVals(content, val, loopLength);
                   activeStr = activeStr.replace(content, newExpression);
                 }else{
-                  activeStr = activeStr.replace(opening, '').replace(ending, '').replace(content, '');
+                  activeStr = activeStr.substr(0, openingPart[0]) + activeStr.substr(endingPart[1], activeStr.length - 1);
                 }
             break;
 
