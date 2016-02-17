@@ -49,8 +49,9 @@ angular.module('zotermiteApp')
         //get zotero-to-zfm
         $http
           .get('api/models')
-          .success(function(d){
-            ZoteroTemplateParser.init(d);
+          .success(function(models){
+            $scope.templateModels = models;
+            ZoteroTemplateParser.init(models);
           })
     };
 

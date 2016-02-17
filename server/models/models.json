@@ -1,101 +1,95 @@
 {
   "zotero_url" : {
 		"path":["links", "alternate", "href"],
-		"description":"description",
+		"description":"Self-link url of the item in the Zotero database (by default protected if you are no logged in)",
 		"type":"value"
 	},
   "title" : {
 		"path":["data", "title"],
-		"description":"description",
+		"description":"Title of the item",
 		"type":"value"
 	},
   "creators" : {
 		"path":["data", "creators"],
-		"description":"description",
-		"type":"value"
+		"description":"Creators of the item. Generally, they are divided into 2 types : authors, contributors and editors",
+		"type":"array"
 	},
   "type" : {
 		"path":["data", "itemType"],
-		"description":"description",
+		"description":"Type of the item. (todo : a list of all zotero itemTypes)",
 		"type":"value"
 	},
   "url" : {
 		"path":["data", "url"],
-		"description":"description",
+		"description":"Url of the item, if specified in the bibliographical record.",
 		"type":"value"
 	},
   "date" : {
 		"path":["data", "date"],
-		"description":"description",
+		"description":"Date of the item.",
 		"type":"value"
 	},
   "language" : {
 		"path":["data", "language"],
-		"description":"description",
+		"description":"Language in which the document is written/spoken.",
 		"type":"value"
 	},
   "short_title" : {
 		"path":["data", "shortTitle"],
-		"description":"description",
+		"description":"Shortened title (if specified)",
 		"type":"value"
 	},
 
   "abstract" : {
 		"path":["data", "abstractNote"],
-		"description":"description",
+		"description":"Abstract of the item.",
 		"type":"value"
 	},
 
   "website_title" : {
 		"path":["data", "websiteTitle"],
-		"description":"description",
+		"description":"Title of the item's website (if specified)",
 		"type":"value"
 	},
   "website_type" : {
 		"path":["data", "websiteType"],
-		"description":"description",
+		"description":"Type of the website (todo : check which are they)",
 		"type":"value"
 	},
 
   "ISSN" : {
 		"path":["data", "ISSN"],
-		"description":"description",
+		"description":"ISSN number of the item.",
 		"type":"value"
 	},
   "DOI" : {
 		"path":["data", "DOI"],
-		"description":"description",
+		"description":"Digital Object Identifier of the item",
 		"type":"value"
 	},
   "issue_number" : {
 		"path":["data", "issue"],
-		"description":"description",
+		"description":"Issue number of the item.",
 		"type":"value"
 	},
   "volume_number": {
 		"path":["data", "volume"],
-		"description":"description",
+		"description":"Volume number of the item.",
 		"type":"value"
 	},
   "pages" : {
 		"path":["data", "pages"],
-		"description":"description",
+		"description":"Begining and ending pages of the item in the parent publication.",
 		"type":"value"
 	},
   "publication_title" : {
 		"path":["data", "publicationTitle"],
-		"description":"description",
+		"description":"Title of the parent publication.",
 		"type":"value"
 	},
   "library_catalog" : {
 		"path":["data", "libraryCatalog"],
-		"description":"description",
+		"description":"Catalog from which the record is taken",
 		"type":"value"
-	},
-
-  "authors" : {
-		"path":["data", "creators"],
-		"description":"description",
-		"type":"array"
 	}
 }
