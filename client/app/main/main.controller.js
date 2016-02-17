@@ -45,6 +45,13 @@ angular.module('zotermiteApp')
 
         $scope.templateChoose = true;
         $scope.leftMenuMode = 'about';
+
+        //get zotero-to-zfm
+        $http
+          .get('api/models')
+          .success(function(d){
+            ZoteroTemplateParser.init(d);
+          })
     };
 
     $scope.setLeftMenuContent = function(mode){
@@ -284,7 +291,9 @@ angular.module('zotermiteApp')
         if(data){
           appendToListOfItems(err, data);
         }
-        callback(err, data);
+        if(callback){
+          callback(err, data);
+        }
       });
       $scope.overallQueryStart += 100;
     };

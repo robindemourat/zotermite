@@ -1,0 +1,101 @@
+{
+  "zotero_url" : {
+		"path":["links", "alternate", "href"],
+		"description":"description",
+		"type":"value"
+	},
+  "title" : {
+		"path":["data", "title"],
+		"description":"description",
+		"type":"value"
+	},
+  "creators" : {
+		"path":["data", "creators"],
+		"description":"description",
+		"type":"value"
+	},
+  "type" : {
+		"path":["data", "itemType"],
+		"description":"description",
+		"type":"value"
+	},
+  "url" : {
+		"path":["data", "url"],
+		"description":"description",
+		"type":"value"
+	},
+  "date" : {
+		"path":["data", "date"],
+		"description":"description",
+		"type":"value"
+	},
+  "language" : {
+		"path":["data", "language"],
+		"description":"description",
+		"type":"value"
+	},
+  "short_title" : {
+		"path":["data", "shortTitle"],
+		"description":"description",
+		"type":"value"
+	},
+
+  "abstract" : {
+		"path":["data", "abstractNote"],
+		"description":"description",
+		"type":"value"
+	},
+
+  "website_title" : {
+		"path":["data", "websiteTitle"],
+		"description":"description",
+		"type":"value"
+	},
+  "website_type" : {
+		"path":["data", "websiteType"],
+		"description":"description",
+		"type":"value"
+	},
+
+  "ISSN" : {
+		"path":["data", "ISSN"],
+		"description":"description",
+		"type":"value"
+	},
+  "DOI" : {
+		"path":["data", "DOI"],
+		"description":"description",
+		"type":"value"
+	},
+  "issue_number" : {
+		"path":["data", "issue"],
+		"description":"description",
+		"type":"value"
+	},
+  "volume_number": {
+		"path":["data", "volume"],
+		"description":"description",
+		"type":"value"
+	},
+  "pages" : {
+		"path":["data", "pages"],
+		"description":"description",
+		"type":"value"
+	},
+  "publication_title" : {
+		"path":["data", "publicationTitle"],
+		"description":"description",
+		"type":"value"
+	},
+  "library_catalog" : {
+		"path":["data", "libraryCatalog"],
+		"description":"description",
+		"type":"value"
+	},
+
+  "authors" : {
+		"path":["data", "creators"],
+		"description":"description",
+		"type":"array"
+	}
+}

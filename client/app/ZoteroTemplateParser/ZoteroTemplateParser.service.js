@@ -4,52 +4,7 @@ angular.module('zotermiteApp')
   .factory('ZoteroTemplateParser', function () {
     var factory = {};
 
-    var templatesModels = {
-        'zotero_url' : ['links', 'alternate', 'href'],
-      'title' : ['data', 'title'],
-      'creators' : ['data', 'creators'],
-      'type' : ['data', 'itemType'],
-      'url' : ['data', 'url'],
-      'date' : ['data', 'date'],
-        'language' : ['data', 'language'],
-        'short_title' : ['data', 'shortTitle'],
-
-        'abstract' : ['data', 'abstractNote'],
-
-        'website_title' : ['data', 'websiteTitle'],
-        'website_type' : ['data', 'websiteType'],
-
-        'ISSN' : ['data', 'ISSN'],
-        'DOI' : ['data', 'DOI'],
-        'issue_number' : ['data', 'issue'],
-        'volume_number': ['data', 'volume'],
-        'pages' : ['data', 'pages'],
-        'publication_title' : ['data', 'publicationTitle'],
-        "library_catalog" : ['data', 'libraryCatalog'],
-
-      'authors' : ['data', 'creators'],
-
-      'creator_1_first_name' : ['data', 'creators', 0, 'firstName'],
-      'creator_1_last_name' : ['data', 'creators', 0, 'lastName'],
-      'creator_1_type' : ['data', 'creators', 0, 'creatorType'],
-
-      'creator_2_first_name' : ['data', 'creators', 1, 'firstName'],
-      'creator_2_last_name' : ['data', 'creators', 1, 'lastName'],
-      'creator_2_type' : ['data', 'creators', 1, 'creatorType'],
-
-      'creator_3_first_name' : ['data', 'creators', 2, 'firstName'],
-      'creator_3_last_name' : ['data', 'creators', 2, 'lastName'],
-      'creator_3_type' : ['data', 'creators', 2, 'creatorType'],
-
-      'creator_4_first_name' : ['data', 'creators', 3, 'firstName'],
-      'creator_4_last_name' : ['data', 'creators', 3, 'lastName'],
-      'creator_4_type' : ['data', 'creators', 3, 'creatorType'],
-
-      'creator_5_first_name' : ['data', 'creators', 4, 'firstName'],
-      'creator_5_last_name' : ['data', 'creators', 4, 'lastName'],
-      'creator_5_type' : ['data', 'creators', 4, 'creatorType'],
-
-    };
+    var templateModels;
 
     var accessObjectProperty = function(item, path){
       var cursor = item, prop;
@@ -79,7 +34,7 @@ angular.module('zotermiteApp')
         }
       });
       key = additionalPath.shift();
-      var path = templatesModels[key];
+      var path = templateModels[key];
       if(!path){
         return;
       }
@@ -193,8 +148,6 @@ angular.module('zotermiteApp')
           switch(statement){
             //conditionnal
             case 'if':
-                // var catchExpression = new RegExp('(\\\$'+statement+':'+val+'\\\$)(\\n.*)(?!\\\$endif:'+val+'\\\$)\\n?(\\\$endif:'+val+'\\\$)', 'gi');
-                // var catchExpression = new RegExp('(\\\$'+statement+':'+val+'\\\$)[\\\s|\\\w|\\\S]*(\\\$endif:'+val+'\\\$)', 'gi');
                 var openingExpression = '$if:'+val+'$';
                 var endingExpression = '$endif:'+val+'$';
                 var openingPart = [activeStr.indexOf(openingExpression), activeStr.indexOf(openingExpression) + openingExpression.length];
@@ -205,22 +158,34 @@ angular.module('zotermiteApp')
                       content = activeStr.substring(contentPart[0], contentPart[1]),
                       ending = activeStr.substring(endingPart[0], endingPart[1]);
 
-                // var catchAll = new RegExp('(\\\$'+statement+':'+val+'\\\$[\\\s|\\\w|\\\S]*\\\$endif:'+val+'\\\$)', 'gi');
                 var hasVal = (checkVal(val, item))?true:false;
                 activeStr = activeStr.replace(opening, '').replace(ending, '');
                 if(!hasVal){
                   activeStr = activeStr.replace(content, '');
                 }
-                // var toDelete = (hasVal)?catchExpression.exec(activeStr):catchAll.exec(activeStr);
-                //     activeStr = activeStr.replace(toDelete[1], '').replace(toDelete[2], '');
+            break;
+
+            case 'ifnot':
+                var openingExpression = '$ifnot:'+val+'$';
+                var endingExpression = '$endifnot:'+val+'$';
+                var openingPart = [activeStr.indexOf(openingExpression), activeStr.indexOf(openingExpression) + openingExpression.length];
+                var contentPart = [activeStr.indexOf(openingExpression) + openingExpression.length, activeStr.indexOf(endingExpression)];
+                var endingPart = [activeStr.indexOf(endingExpression), activeStr.indexOf(endingExpression) + endingExpression.length];
+
+                var opening = activeStr.substring(openingPart[0], openingPart[1]),
+                      content = activeStr.substring(contentPart[0], contentPart[1]),
+                      ending = activeStr.substring(endingPart[0], endingPart[1]);
+
+                var hasVal = (checkVal(val, item))?true:false;
+                activeStr = activeStr.replace(opening, '').replace(ending, '');
+                if(hasVal){
+                  activeStr = activeStr.replace(content, '');
+                }
             break;
 
             //loop
             case 'loop':
 
-                // var catchExpression = new RegExp('(\\\$'+statement+':'+val+'\\\$)([\\\s|\\\w|\\\S]*)(\\\$endloop:'+val+'\\\$)', 'gi');
-                // var catchExpression = new RegExp('(\\\$'+statement+':'+val+'\\\$)(\\n.*)(?!\\\$endloop:'+val+'\\\$)\\n?(\\\$endloop:'+val+'\\\$)', 'gi');
-                // var catchExpression = new RegExp('(\\\$'+statement+':'+val+'\\\$)(\\n.*)(?!\\\$endloop:'+val+'\\\$)\\n?(\\\$endloop:'+val+'\\\$)', 'gi');
                 var openingExpression = '$loop:'+val+'$';
                 var valWithoutOptions = val.split(':')[0];
                 var endingExpression = '$endloop:'+valWithoutOptions+'$';
@@ -284,6 +249,13 @@ angular.module('zotermiteApp')
       }
       return output;
     };
+
+    factory.init = function(models){
+      templateModels = {};
+      for(var i in models){
+        templateModels[i] = models[i].path;
+      }
+    }
 
     return factory;
   });
