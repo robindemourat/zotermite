@@ -1,5 +1,13 @@
 <!-- big container -->
-<div  class="big-container animate-medium" ng-class="setBigContainerClass()" fitheight>
+<div
+  class="big-container animate-medium"
+  ng-class="setBigContainerClass()"
+  fitheight
+  header-styling="headerStyles"
+>
+
+  <!--dynamically changed headers styling -->
+  <style ng-bind-html="headerStyles"></style>
 
   <!-- left menu column -->
   <div class="column side-column"
@@ -102,7 +110,7 @@
     >
 
       <div class="animate-medium"
-        ng-style="{'marginTop':(templateChoose)?'50%':'0'}"
+        ng-class="{'centered':templateChoose}"
       >
         <h2
           class="animate-medium"
@@ -225,7 +233,7 @@
     >
 
       <div class="animate-medium"
-        ng-style="{'marginTop':(connectingZotero)?'50%':'0'}"
+        ng-class="{'centered':connectingZotero}"
       >
         <h2
           class="animate-medium"
@@ -368,17 +376,6 @@
         class="final-step btn-group flexed"
         ng-if="selectedItems.length > 0"
       >
-        <!--<div
-            class="btn"
-            ng-click="switchExportAsList()"
-        >
-            <span ng-if="!exportAsList">
-              Export entries as a one-file list
-            </span>
-            <span ng-if="exportAsList">
-              Export entries in seperate files
-            </span>
-        </div>-->
         <div
           class="btn animate-medium"
           clip-click="copyToClipboard(selectedItems)"
@@ -401,12 +398,13 @@
     >
 
       <div class="animate-medium"
-        ng-style="{'marginTop':(!userId || !apiKey || !activeTemplate || !selectedItems.length)?'50%':'0'}"
+          ng-class="{'centered':!userId || !apiKey || !activeTemplate || !selectedItems.length}"
+
       >
 
         <h2
-          class="animate-medium"
           ng-class="{'big':!userId || !apiKey || !activeTemplate || !selectedItems.length}"
+          class="animate-medium"
         >
         <span class="step-number">3</span>
         export markdown

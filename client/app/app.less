@@ -258,6 +258,12 @@ a:hover
     overflow-y : auto;
 }
 
+.centered{
+  vertical-align:middle;
+  display:inline-block;
+  line-height:normal; /* on rétablit le line-height */
+}
+
 .moving-header.react
 {
     background : grey;
@@ -550,6 +556,8 @@ zotero-related interface
     border: none!important;
     border-radius: 0!important;
     background: inherit;
+    display : flex;
+    flex-flow : row wrap;
 }
 
 .connect-interface span,
@@ -991,6 +999,11 @@ SPECIFIC COMPONENTS
 Markdown editor
 */
 
+.editor-container
+{
+    padding-right : 0;
+}
+
 .cm-s-default .cm-header-1
 {
     font-size: 2.4em;
@@ -1110,6 +1123,36 @@ vary height
 {
     max-height: 0;
 }
+
+
+/*
+=============================
+RESPONSIVE DESIGN
+==============================
+*/
+
+
+/*col-md*/
+@media (max-width:1500px)
+{
+    .moving-header h2.big{
+        font-size : 1em;
+        line-height : 1.2em;
+    }
+}
+
+/*col-sm*/
+@media (max-width:992px)
+{
+
+}
+
+/* col-xs */
+@media (max-width :768px)
+{
+
+}
+
 
 
 

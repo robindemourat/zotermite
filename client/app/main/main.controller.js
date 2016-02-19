@@ -49,7 +49,7 @@ angular.module('zotermiteApp')
 
         $scope.sortAscending = true;
         $scope.sortMode = 'title';
-
+        $scope.headerStyles = ".moving-header{height:500px;line-height:500px}"
 
         //get zotero-to-zfm
         $http
