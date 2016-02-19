@@ -9,9 +9,10 @@ angular.module('zotermiteApp', [
   'hc.marked',
   'ui.codemirror',
   'angularFileUpload',
-  'angulike'
+  'angulike',
+  'ngClipboard'
 ])
-  .config(function ($routeProvider, $locationProvider, markedProvider) {
+  .config(function ($routeProvider, $locationProvider, markedProvider, ngClipProvider) {
     $routeProvider
       .otherwise({
         redirectTo: '/'
@@ -24,4 +25,6 @@ angular.module('zotermiteApp', [
       tables: true,
       breaks : true
     });
+
+    ngClipProvider.setPath("bower_components/zeroclipboard/dist/ZeroClipboard.swf");
   });

@@ -5,7 +5,8 @@ angular.module('zotermiteApp')
     return {
       restrict: 'AC',
       scope : {
-        parentSelector : "@fitHeight"
+        parentSelector : "@fitHeight",
+        marginBottom : "@"
       },
       link: function postLink(scope, element, attrs) {
         var elementTop,
@@ -29,10 +30,15 @@ angular.module('zotermiteApp')
             elementTop = element.position().top;
             elementHeight = element.height();
             next = element.next();
-            nextTop = next.position().top;
+            if(next.position()){
+              nextTop = next.position().top;
+            }else{
+              nextTop = element.parent().height();
+            }
             if(nextTop == 0){
               return $timeout(resize);
             }
+
             element.height(nextTop - elementTop);
           }
         }
@@ -41,7 +47,16 @@ angular.module('zotermiteApp')
         resize();
         scope.$on('$destroy', function(){
           angular.element($window).off('resize', resize);
-        })
+        });
+
+        scope.$watch(function(){
+          var n = next && next.position();
+          if(n){
+            return next.position().top;
+          }else{
+            return undefined;
+          }
+        }, resize);
 
       }
     };

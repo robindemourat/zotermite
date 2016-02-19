@@ -405,8 +405,8 @@ angular.module('zotermiteApp')
     }
 
     $scope.copyToClipboard = function(items){
-      var output = "";
       console.info('copying items to clipboard ', items);
+      var output = "";
       if($scope.exportAsList){
         for(var i in items){
           output += ZoteroTemplateParser.parseZoteroItemWithTemplate($scope.activeTemplate, items[i]).body + '\n\n';

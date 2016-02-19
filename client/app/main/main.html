@@ -33,7 +33,7 @@
   </div><!-- end left menu column -->
 
   <!-- template column -->
-  <div class="column">
+  <div class="column editor-column">
     <div class="row step-header">
 
     </div>
@@ -48,7 +48,7 @@
           ng-show="!templateChoose"
        >
         <ui-codemirror
-          fit-height=".editor-container"
+          fit-height
           ui-codemirror-opts="editorOptions"
           ui-refresh='templateChoose'
           placeholder="type a template for markdown body"
@@ -61,7 +61,7 @@
       ng-if="!templateChoose"
     >
       <div
-        class="final-step btn-group"
+        class="final-step btn-group flexed"
       >
         <div
           class="btn animate-medium"
