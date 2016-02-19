@@ -387,7 +387,7 @@ angular.module('zotermiteApp')
         for(var i in items){
           output += ZoteroTemplateParser.parseZoteroItemWithTemplate($scope.activeTemplate, items[i]).body + '\n\n';
         }
-        downloadFile(output, 'zotero_items_list.md');
+        downloadFile(output, 'zotero_items_list');
       }else{
         for(var i in items){
           var item = items[i];
@@ -399,6 +399,10 @@ angular.module('zotermiteApp')
         }
       }
     };
+
+    $scope.downloadActiveTemplate = function(){
+      downloadFile($scope.activeTemplate, 'my_zotermite_template');
+    }
 
     $scope.copyToClipboard = function(items){
       var output = "";

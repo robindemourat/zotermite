@@ -11,7 +11,7 @@
 	},
   "creators" : {
 		"path":["data", "creators"],
-		"description":"Creators of the item. Generally, they are divided into 2 types : authors, contributors and editors",
+		"description":"Creators of the item. Generally, they are divided into 3 types : authors, contributors and editors",
 		"type":"array"
 	},
   "type" : {

@@ -1,10 +1,10 @@
-# Markdown
+# Markdown basics
 
 Zotermite-flavoured markdown (ZFM) is based upon github-flavoured markdown.
 
 If you are not familiar with markdown, please check first [this documentation]( https://help.github.com/articles/basic-writing-and-formatting-syntax/) about the markdown language and its faculties.
 
-# Zotermite tags
+# Zotermite-flavoured markdown
 
 Zotermite works with a system of tags.
 Tags allow you to populate your template with zotero-based values.
