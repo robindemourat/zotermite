@@ -18,6 +18,40 @@ Check it directly in (the app)[https://zotermite.herokuapp.com] or find it at th
 * (syntax documentation)[https://github.com/robindemourat/zotermite/blob/master/client/assets/markdown/syntax-help.md]
 * (https://github.com/robindemourat/zotermite/blob/master/server/models/models.json)[vocabulary documentation]
 
-# API doc
+# API service
 
-Todo
+Zotermite also features a mini API REST Service allowing you to dynamically process zotero items with its templating engine.
+
+Here is the endoint pattern :
+```
+POST /api/convert/:inputFormat/:template?
+```
+
+``inputFormat`` : the format in which the data will be past. For now, it only supports the value ``zotero``, which correspond to the native json objects served by the zotero API. Later, we could add other input formats, like bibtext for instance.
+
+``template`` : the template to use to populate the response with input data.
+
+The data to pass through your POST request must look like that :
+
+```
+{
+    items : [array] // an array of the items to process,
+    
+    template : {string} //optional : if you want to use your own template, don't pass a template parameters and directly input its content as a string through this property
+}
+```
+
+A successful answer you will get looks like that :
+
+```
+{
+    template : {string} // the template that have been use to process your data
+
+    items : [{
+                item : [object] //the input data
+                markdownContent : {string} //the input, populated content
+            }]
+
+    joinedContent : {string} //a string featuring all your outputs as one single text
+}
+```
