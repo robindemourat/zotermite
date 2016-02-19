@@ -16,7 +16,7 @@ Contributions are welcome, especially for the writing of additional standard tem
 Check it directly in [the app](https://zotermite.herokuapp.com) or find it at these addresses in this repo :
 
 * [syntax documentation](https://github.com/robindemourat/zotermite/blob/master/client/assets/markdown/syntax-help.md)
-* [https://github.com/robindemourat/zotermite/blob/master/server/models/models.json](vocabulary documentation)
+* [vocabulary documentation](https://github.com/robindemourat/zotermite/blob/master/server/models/models.json)
 
 # API service
 
@@ -29,7 +29,7 @@ POST /api/convert/:inputFormat/:template?
 
 ``inputFormat`` : the format in which the data will be past. For now, it only supports the value ``zotero``, which correspond to the native json objects served by the zotero API. Later, we could add other input formats, like bibtext for instance.
 
-``template`` : the template to use to populate the response with input data.
+``template`` : the built-in template to use to populate the response with input data.
 
 The data to pass through your POST request must look like that :
 
@@ -55,3 +55,7 @@ A successful answer you will get looks like that :
     joinedContent : {string} //a string featuring all your outputs as one single text
 }
 ```
+
+## Contribute !
+
+Contributions are welcome, especially for writing additional standard templates (according to major bibliographic specs, common uses, ...).
