@@ -21,6 +21,7 @@ angular.module('zotermiteApp', [
 
     markedProvider.setOptions({
       gfm: true,
-      tables: true
+      tables: true,
+      breaks : true
     });
   });

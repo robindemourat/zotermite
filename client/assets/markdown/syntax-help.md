@@ -11,9 +11,9 @@ Tags allow you to populate your template with zotero-based values.
 
 In ZFM, there are four types of tags :
 * $set$ : value substitution
-* $if$ : positive conditional
-* $ifnot$ : negative conditionnal
-* $loop$ : recursivity
+* $if$ and $endif$ : positive conditional
+* $ifnot$ and $endifnot$ : negative conditionnal
+* $loop$ and $endloop$ : recursivity
 
 # $set$ and implicit set
 
@@ -47,11 +47,40 @@ $title$
 
 Todo : explain arrays access and properties access.
 
-Todo : add (and then explain) the following modificators : getYear and getInitials.
+## Modificators
+
+Template values can be modified through simple operations.
+
+### uppercase and lowercase
+
+Transforms your value casing to uppercase or lowercase:
+
+```
+$title:uppercase$
+```
+
+### initials
+
+Fetch the initial of a value (made for first names of course, but do whatever you want with that):
+
+```
+$creators[0].firstName:initials$
+```
+
+### year
+
+Extracts the year for a value (made for item dates of course, but do whatever you want with that):
+
+```
+$date:year$
+```
+
 
 # $if$ and $endif$
 
-Conditionals allow you to display some parts of your template only if a specific value is available.
+## Availability $if$
+
+Conditionals that display some parts of your template only if a specific value is available.
 
 Example :
 
@@ -63,7 +92,30 @@ $endif:title$
 
 You will note that the endif statement also features ":title" in order to be recognized.
 
-Todo : implement and explain array length related ifs, and equality statements ifs
+## Comparator $if$
+
+Conditionals that test your value against another.
+
+```
+$if:type:equals_to_book$
+Book title : $title$
+$endif:type:equals_to_book$
+```
+
+
+Here is a list of comparators available :
+* equals_to_
+* superior_to_
+* inferior_to_
+* superiorequals_to_
+* inferiorequals_to_
+* lengthequals_to_
+* lengthsuperior_to_
+* lengthinferior_to_
+* lengthsuperiorequals_to_
+* lengthinferiorequals_to_
+
+Comparators begining with "length" will test the length of value (works for text and arrays such as list of creators).
 
 # $ifnot$ and $endifnot$
 

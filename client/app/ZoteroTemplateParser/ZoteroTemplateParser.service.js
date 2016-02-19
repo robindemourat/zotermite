@@ -17,11 +17,147 @@ angular.module('zotermiteApp')
       return cursor;
     }
 
+    var fillsConditions = function(item, path, conditions){
+      var isOk = true,
+          value = accessObjectProperty(item, path);
+      if(!value){
+        return false;
+      }
+
+      if(typeof value === 'string'){
+        value = value.toLowerCase();
+      }
+
+      conditions.some(function(condition){
+        var v = condition.conditionValue;
+        if(!v.length){
+          return false;
+        }
+        if(typeof v === 'string'){
+          v = v.toLowerCase();
+        }
+        switch(condition.conditionType){
+
+          case 'equals':
+            if(!(v === value)){
+              return isOk = false;
+            }
+          break;
+
+          case 'inferior':
+            if(!(v > value)){
+              return isOk = false;
+            }
+          break;
+
+          case 'superior':
+            if(!(v < value)){
+              return isOk = false;
+            }
+          break;
+
+          case 'inferiorequals':
+            if(!(v >= value)){
+              return isOk = false;
+            }
+          break;
+
+          case 'superiorequals':
+            if(!(v <= value)){
+              return isOk = false;
+            }
+          break;
+
+          case 'lengthequals':
+            if(!(+v === value.length)){
+              return isOk = false;
+            }
+          break;
+
+          case 'lengthinferior':
+            if(!(+v > value.length)){
+              return isOk = false;
+            }
+          break;
+
+          case 'lengthsuperior':
+            if(!(+v < value.length)){
+              return isOk = false;
+            }
+          break;
+
+          case 'lengthinferiorequals':
+            if(!(+v >= value.length)){
+              return isOk = false;
+            }
+          break;
+
+          case 'lengthsuperiorequals':
+            if(!(+v <= value.length)){
+              return isOk = false;
+            }
+          break;
+
+
+          default:
+          break;
+        }
+      });
+      return isOk;
+    }
+
+    var transformAndReturn = function(item, path, actions){
+      var val = accessObjectProperty(item, path);
+
+      actions.forEach(function(action){
+        switch(action){
+
+          case 'initials':
+            if(val.toUpperCase){
+              var parts = val.split('-').map(function(part){
+                return part.substr(0, 1).toUpperCase();
+              });
+              val = parts.join('-') + '.';
+            }
+          break;
+
+          case 'uppercase':
+            if(val.toUpperCase){
+              val = val.toUpperCase();
+            }
+          break;
+
+          case 'lowercase':
+            if(val.toLowerCase){
+              val = val.toLowerCase();
+            }
+          break;
+
+          case 'year':
+            if(val.match){
+              val = val.match(/[\d]{4}/)[0];
+            }
+          break;
+
+          default:
+          break;
+        }
+      });
+
+      return val;
+    }
+
     var findValInItem = function(val, item){
       var arrayRE = /(.*)\[(\d+)\]/,
           matchArray;
-      var key = val, additionalPath = [];
-      //process properties and array accesses
+
+      var additionalInformation = val.split(':'),
+          key = additionalInformation.shift(),
+          additionalPath = [],
+          conditions = [],
+          actions = [];
+
+      //process additional path : properties and array accesses
       //first, process properties
       additionalPath = key.split('.');
       additionalPath.forEach(function(expression, index){
@@ -39,9 +175,28 @@ angular.module('zotermiteApp')
         return;
       }
       path = path.concat(additionalPath);
-      // console.log('template key : ', key, 'complete path : ', path);
 
-      return accessObjectProperty(item, path);
+      //process additional information
+      if(additionalInformation.length){
+        additionalInformation.forEach(function(information){
+          //catch condition
+          if(information.indexOf('_to_') > -1){
+            var vals = information.split('_to_');
+            conditions.push({
+              conditionType : vals[0],
+              conditionValue : vals[1]
+            });
+          }else{//else store actions
+            actions.push(information.toLowerCase());
+          }
+        });
+        //object fills its conditions ?
+        if(fillsConditions(item, path, conditions)){
+          //then transform and return it
+          return transformAndReturn(item, path, actions);
+        }else return undefined;
+      }else return accessObjectProperty(item, path);
+
     };
 
     var fetchVal = function(val, item){
@@ -88,19 +243,28 @@ angular.module('zotermiteApp')
       while(match = r.exec(expression)){
         var val = match && match[1];
         var key = match && match[2];
+        var brk;
         if(key){
           var output = '';
           for(var i = 0 ; i < loopLength ; i++){
             var line = input
                         .replace(new RegExp(val, 'gi'), key + '[' + i + ']')//substitute
-                        .trim();
+                         // .trim();
+            if(line.substr(line.length - 2, line.length - 1) === '\n\n'){
+              brk = true;
+            }
+
+            line = line.trim();
 
             if(options.separator && i != loopLength - 1){
               line += options.separator;
             }else if(options.terminator && i == loopLength - 1){
               line += options.terminator;
             }
-            line += '\n';
+            if(brk){
+              line += '\n';
+            }
+            // line += '\n';
             output += line;
           }
           return output;
@@ -139,6 +303,7 @@ angular.module('zotermiteApp')
             matching = '\\\$'+statement.replace(/\./g, '\\\.').replace(/\[/g, '\\\[').replace(/\]/g, '\\\]')+':'+val.replace(/\./g, '\\\.').replace(/\[/g, '\\\[').replace(/\]/g, '\\\]')+'\\\$';
           }
 
+          // console.log(matches[+i], ' has val ', val, 'and statement ', statement);
 
 
           // var statement = expressions[1];
@@ -202,22 +367,24 @@ angular.module('zotermiteApp')
                   activeStr = activeStr.replace(opening, '').replace(ending, '');
                   var newExpression = substituteLoopVals(content, val, loopLength);
                   activeStr = activeStr.replace(content, newExpression);
-                }else{
+                }else if(activeStr.length - 1 <= endingPart[1]){
                   activeStr = activeStr.substr(0, openingPart[0]) + activeStr.substr(endingPart[1], activeStr.length - 1);
                 }
             break;
 
             //replace by value
-            case 'set':
-              if(val != 'endif'){
+            default:
+            // case 'set':
+              if(statement != 'endif' && statement != 'endifnot'  && statement != 'endloop'){
+                  if(statement != 'set'){
+                    val = statement + ':' + val;
+                  }
+
                   var newVal = fetchVal(val, item);
                   matching = new RegExp(matching, 'g');
                   // console.log('set', val, 'from', matching, ' to ', newVal);
                   activeStr = activeStr.replace(matching, newVal);
               }
-            break;
-
-            default:
             break;
           }
         }
