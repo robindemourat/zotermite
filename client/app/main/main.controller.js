@@ -31,7 +31,6 @@ angular.module('zotermiteApp')
         $scope.rememberCredentials = false;
       }
 
-
       //markdown-template editor
        $scope.editorOptions = {
             lineWrapping : true,
@@ -47,6 +46,10 @@ angular.module('zotermiteApp')
 
         $scope.templateChoose = true;
         $scope.leftMenuMode = 'about';
+
+        $scope.sortAscending = true;
+        $scope.sortMode = 'title';
+
 
         //get zotero-to-zfm
         $http
@@ -268,15 +271,110 @@ angular.module('zotermiteApp')
       }
     };
 
+
+    var sortSelectedItems = function(){
+      if(!angular.isDefined($scope.sortMode) || !angular.isDefined($scope.sortAscending)){
+        return;
+      }else{
+        var before = $scope.sortAscending,
+            after = !$scope.sortAscending,
+            equal = 0;
+
+        $scope.selectedItems = $scope.selectedItems.sort(function(a,b){
+          switch($scope.sortMode){
+            case 'title':
+              var title1 = a.data.title,
+                  title2 = b.data.title;
+
+              if(title1 > title2){
+                return before;
+              }else if(title1 < title2){
+                return after;
+              }else return equal;
+            break;
+
+            case 'firstAuthor':
+              var author1 = a.data.creators[0],
+                  author2 = b.data.creators[0];
+
+              if(!author1){
+                return after;
+              }else if(!author2){
+                return before;
+              }
+
+              author1 = author1.lastName;
+              author2 = author2.lastName;
+
+              if(author1 > author2){
+                return after;
+              }else if(author1 < author2){
+                return before;
+              }else return equal;
+            break;
+
+            case 'year':
+              var date1 = a.data.date,
+                  date2 = b.data.date;
+
+              if(!date1){
+                return after;
+              }else if(!date2){
+                return before;
+              }
+
+              var year1 = date1.match(/[\d]{4}/),
+                  year2 = date2.match(/[\d]{4}/);
+
+              if(!year1){
+                return after;
+              }else if(!year2){
+                return before;
+              }
+
+              if(+year1[0] > +year2[0]){
+                return before;
+              }else if(+year1[0] < +year2[0]){
+                return after;
+              }else return equal;
+            break;
+
+            default:
+              return 1;
+            break;
+          }
+        });
+      }
+    }
+
+    $scope.setSortMode = function(mode){
+      $scope.sortMode = mode;
+      console.log('new sort mode : ', $scope.sortMode, ', sort ascending :', $scope.sortAscending);
+      sortSelectedItems();
+      setTimeout(function(){
+        $scope.$apply();
+      });
+    }
+
+    $scope.setSortAscending = function(ascending){
+      $scope.sortAscending = ascending;
+      setTimeout(function(){
+        $scope.$apply();
+        sortSelectedItems();
+      });
+    }
+
     $scope.addToSelected = function(index){
       var d = $scope.overallItems[index];
       if(!itemExists(d, $scope.selectedItems)){
         $scope.selectedItems.push($scope.overallItems[index]);
+        sortSelectedItems();
       }
     };
 
     $scope.removeFromSelected = function(index){
       $scope.selectedItems.splice(index, 1);
+        sortSelectedItems();
     };
 
     $scope.clearAllSelected = function(){
@@ -368,13 +466,11 @@ angular.module('zotermiteApp')
       query.apiKey(apiKey);
     };
 
-    $scope.switchExportAsList = function(){
-      $scope.exportAsList = !$scope.exportAsList;
-      if($scope.exportAsList){
-        $scope.addAlert('', 'entries will be exported as a one-file list of processed items');
-      }else{
-        $scope.addAlert('', 'entries will be exported as separate files for each processed item');
-      }
+    $scope.switchExportAsList = function(exp){
+      $scope.exportAsList = exp;
+      setTimeout(function(){
+        $scope.$apply();
+      })
     };
 
     var downloadFile = function(content, filename){
@@ -407,12 +503,8 @@ angular.module('zotermiteApp')
     $scope.copyToClipboard = function(items){
       console.info('copying items to clipboard ', items);
       var output = "";
-      if($scope.exportAsList){
-        for(var i in items){
-          output += ZoteroTemplateParser.parseZoteroItemWithTemplate($scope.activeTemplate, items[i]).body + '\n\n';
-        }
-      }else{
-        output += ZoteroTemplateParser.parseZoteroItemWithTemplate($scope.activeTemplate, items[0]).body;
+      for(var i in items){
+        output += ZoteroTemplateParser.parseZoteroItemWithTemplate($scope.activeTemplate, items[i]).body + '\n\n';
       }
 
       $log.info('processed result copied to clipboard');

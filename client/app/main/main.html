@@ -114,7 +114,7 @@
             Choose a template from this list :
           </p>
 
-          <ul class="templates-list">
+          <ul class="big-list" id="templates-list">
             <li
               class="template animate-medium"
               ng-repeat="template in templates track by $index"
@@ -361,7 +361,7 @@
         </div>
       </div>
       <div
-        class="final-step btn-group"
+        class="final-step btn-group flexed"
         ng-if="selectedItems.length > 0"
       >
         <!--<div
@@ -465,9 +465,12 @@
   </div><!-- end right column-->
 
 
-  <div class="container alerts">
-        <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)" class="animate-fast">{{alert.msg}}</alert>
-  </div>
+  <!-- column cache -->
+  <div
+    class="column column-cache animate-medium"
+    ng-if="asides.left || asides.right"
+    ng-click="asides.left = asides.right = false"
+  ></div>
 
 
 </div><!--end big container -->
