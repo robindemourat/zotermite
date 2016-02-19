@@ -9,17 +9,14 @@ Does the previous sentence sound like a foreign language to your kind ears ? Wel
 
 Zotermite can be used to generate markdown bibliographies, but also reading notes templates (the purpose for which I made it in the first place), and whatever your shiny imagination can produce.
 
-Please note that Zotermite proposes also a REST API service that you can use programmatically (check out the github for that).
-
 Contributions are welcome, especially for the writing of additional standard templates. Send me a mail or pull-request the github for that !
 
-# Templating language
+# Use zotermite : documentation
 
-Todo
+Check it directly in (the app)[https://zotermite.herokuapp.com] or find it at these addresses in this repo :
 
-# Zotero objects to template variables : summary
-
-Todo
+* (syntax documentation)[https://github.com/robindemourat/zotermite/blob/master/client/assets/markdown/syntax-help.md]
+* (https://github.com/robindemourat/zotermite/blob/master/server/models/models.json)[vocabulary documentation]
 
 # API doc
 

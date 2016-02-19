@@ -214,6 +214,18 @@ a:hover
     padding-bottom: 2em;
 }
 
+.side-column .consultable-container
+{
+    padding : 0 4em 0 4em;
+}
+
+
+.side-column:first-of-type .consultable-container
+{
+    padding : 0 4em 0 2em;
+}
+
+
 .CodeMirror
 {
     height: 100%;
@@ -243,6 +255,7 @@ a:hover
 
     color: white;
     background: #333;
+    overflow-y : auto;
 }
 
 .moving-header.react
@@ -430,14 +443,17 @@ ul.big-list
 {
     overflow-y: auto;
 
-    width: 50%;
     max-height: 300px;
-    margin: 0;
-    margin-left: 25%;
-    margin-bottom : 2em;
+    margin-bottom : 5em;
     padding: 0;
 
     background: white;
+}
+
+ul.big-list#templates-list
+{
+    margin-left : 2em;
+    margin-right : 2em;
 }
 
 .big-list li
@@ -453,6 +469,7 @@ ul.big-list
     color: black;
     border-bottom: 1px solid darkgrey;
     background: lightgrey;
+    text-align : center;
 }
 
 .big-list li.active
@@ -772,6 +789,10 @@ alert
 GENERIC COMPONENTS
 ==========================
 */
+
+ol>li{
+    margin-bottom : 1em;
+}
 
 .guttered
 {
