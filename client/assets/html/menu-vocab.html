@@ -1,12 +1,20 @@
 <div class="guttered consultable-container long-container">
   <h1>Zotero-to-template vocabulary</h1>
 
+  <p>Zotermite allows you to build templates that will be populated with Zotero items properties. For instance the tag <code>$title$</code> tag will be replaced by the title of the Zotero item you want to process. Here is a list of all the zotermite tags available :</p>
   <div>
     <div
       ng-repeat="(modelName, model) in templateModels track by $index"
+      class="vocab-item"
     >
       <h3 ng-bind="'$'+modelName+'$'"></h3>
       <p ng-bind="model.description"></p>
+      <div ng-if="model.properties">
+        <h4>Properties :</h4>
+        <p ng-repeat="property in model.properties">
+          <code ng-bind="property.var"></code> : <span ng-bind="property.description"></span>
+        </p>
+      </div>
     </div>
   </div>
 

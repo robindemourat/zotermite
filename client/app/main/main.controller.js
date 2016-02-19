@@ -366,6 +366,7 @@ angular.module('zotermiteApp')
 
     $scope.addToSelected = function(index){
       var d = $scope.overallItems[index];
+      console.log(d);
       if(!itemExists(d, $scope.selectedItems)){
         $scope.selectedItems.push($scope.overallItems[index]);
         sortSelectedItems();

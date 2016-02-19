@@ -1,32 +1,52 @@
 {
-  "zotero_url" : {
-		"path":["links", "alternate", "href"],
-		"description":"Self-link url of the item in the Zotero database (by default protected if you are no logged in)",
-		"type":"value"
-	},
-  "title" : {
+	"title" : {
 		"path":["data", "title"],
-		"description":"Title of the item",
+		"description":"Title of the record",
 		"type":"value"
 	},
   "creators" : {
 		"path":["data", "creators"],
-		"description":"Creators of the item. Generally, they are divided into 3 types : authors, contributors and editors",
-		"type":"array"
+		"description":"Creators of the record. Generally, they are divided into 3 types : authors, contributors and editors",
+		"type":"array",
+		"properties" :
+		[
+			{
+				"var" : "creatorType",
+				"description" : "The type of the creator (author, editor, or contributor)"
+			},
+			{
+				"var" : "firstName",
+				"description" : "The first name of the creator"
+			},
+			{
+				"var" : "lastName",
+				"description" : "The last name of the creator"
+			}
+		]
 	},
   "type" : {
-		"path":["data", "itemType"],
-		"description":"Type of the item. (todo : a list of all zotero itemTypes)",
+		"path":["data", "recordType"],
+		"description":"Type of the record. (todo : a list of all zotero recordTypes)",
+		"type":"value"
+	},
+  "zotero_url" : {
+		"path":["links", "alternate", "href"],
+		"description":"Self-link url of the record in the Zotero database (by default protected if you are no logged in)",
 		"type":"value"
 	},
   "url" : {
 		"path":["data", "url"],
-		"description":"Url of the item, if specified in the bibliographical record.",
+		"description":"Url of the record, if specified in the bibliographical record.",
 		"type":"value"
 	},
   "date" : {
 		"path":["data", "date"],
-		"description":"Date of the item.",
+		"description":"Date of the record.",
+		"type":"value"
+	},
+	"accessdate" : {
+		"path":["data", "accessDate"],
+		"description":"Date of access to the website of the record.",
 		"type":"value"
 	},
   "language" : {
@@ -42,13 +62,13 @@
 
   "abstract" : {
 		"path":["data", "abstractNote"],
-		"description":"Abstract of the item.",
+		"description":"Abstract of the record.",
 		"type":"value"
 	},
 
   "website_title" : {
 		"path":["data", "websiteTitle"],
-		"description":"Title of the item's website (if specified)",
+		"description":"Title of the record's website (if specified)",
 		"type":"value"
 	},
   "website_type" : {
@@ -59,27 +79,27 @@
 
   "ISSN" : {
 		"path":["data", "ISSN"],
-		"description":"ISSN number of the item.",
+		"description":"ISSN number of the record.",
 		"type":"value"
 	},
   "DOI" : {
 		"path":["data", "DOI"],
-		"description":"Digital Object Identifier of the item",
+		"description":"Digital Object Identifier of the record",
 		"type":"value"
 	},
   "issue_number" : {
 		"path":["data", "issue"],
-		"description":"Issue number of the item.",
+		"description":"Issue number of the record.",
 		"type":"value"
 	},
   "volume_number": {
 		"path":["data", "volume"],
-		"description":"Volume number of the item.",
+		"description":"Volume number of the record.",
 		"type":"value"
 	},
   "pages" : {
 		"path":["data", "pages"],
-		"description":"Begining and ending pages of the item in the parent publication.",
+		"description":"Begining and ending pages of the record in the parent publication.",
 		"type":"value"
 	},
   "publication_title" : {
@@ -87,9 +107,49 @@
 		"description":"Title of the parent publication.",
 		"type":"value"
 	},
+	"rights" : {
+		"path":["data", "rights"],
+		"description":"Rights attached to the records",
+		"type":"value"
+	},
   "library_catalog" : {
 		"path":["data", "libraryCatalog"],
 		"description":"Catalog from which the record is taken",
+		"type":"value"
+	},
+	"tags" : {
+		"path":["data", "tags"],
+		"description":"Tags added to the record in zotero",
+		"type":"array",
+		"properties" : [
+			{
+				"var" : "tag",
+				"description" : "The name of the tag"
+			},
+			{
+				"var" : "number",
+				"description" : "Unknown number (to investigate)"
+			}
+		]
+	},
+	"collections" : {
+		"path":["data", "collections"],
+		"description":"Zotero collections in which the record has been stored",
+		"type":"array"
+	},
+	"connections" : {
+		"path":["data", "connections"],
+		"description":"Zotero records connected to the current one (advanced : returns another zotero record)",
+		"type":"array"
+	},
+	"dateadded" : {
+		"path":["data", "dateAdded"],
+		"description":"Date when the zotero record has been added to library",
+		"type":"value"
+	},
+	"datemodified" : {
+		"path":["data", "dateModified"],
+		"description":"Date when the zotero record has been lastly modified in the library.",
 		"type":"value"
 	}
 }

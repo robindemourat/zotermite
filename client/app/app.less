@@ -338,6 +338,7 @@ form.inline-option
 .btn-group .btn.active
 {
     background: brown;
+    cursor : default;
 }
 
 .btn-group.flexed .btn
@@ -360,7 +361,7 @@ form.inline-option
 }
 
 
-.bottom-group .btn-group .btn:hover,
+.bottom-group .btn-group .btn:not(.active):hover,
 .bottom-group .btn-group .zeroclipboard-is-hover
 {
     color: white;
@@ -758,6 +759,13 @@ alert
     text-align: center;
 }
 
+
+.vocab-item
+{
+    margin-bottom : 1em;
+    padding : 1em;
+    background : lightgrey;
+}
 
 /*
 ===========================
