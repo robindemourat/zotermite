@@ -2,7 +2,7 @@
 
 
 angular.module('zotermiteApp')
-  .controller('MainCtrl', function ($scope, $cookieStore, $log, $http, $timeout, ZoteroQueryHandler, ZoteroQueryBuilder, ZoteroTemplateParser, FileDownload, codemirrorMarkdown) {
+  .controller('MainCtrl', function ($scope, $cookieStore, $log, $http, $timeout, ZoteroQueryHandler, ZoteroQueryBuilder, ZoteroTemplateParser, FileDownload, codemirrorMarkdown, FileUploader) {
     var query;
 
     var initVariables = function(){
@@ -511,24 +511,48 @@ angular.module('zotermiteApp')
       return output;
     };
 
-    $scope.addAlert = function(type, msg){
-      $scope.alerts.push({type : type, msg: msg});
 
-      $timeout(function(){
-        console.log($scope.alerts);
-        $scope.alerts.shift();
-        console.log($scope.alerts);
-      }, 5000);
 
-      setTimeout(function(){
-        $scope.$apply();
+    var acceptedImportExts = ['txt', 'md'];
+    $scope.uploader = new FileUploader({
+        filters: [{
+            name: 'fileType',
+            // A user-defined filter
+            fn: function(item) {
+              var extension = item.name.split('.')[item.name.split('.').length - 1], valid = false;
+              for(var i in acceptedImportExts){
+                if(acceptedImportExts[i] == extension){
+                  valid = true;
+                }
+              }
+              if(valid)
+                  return true;
+            }
+        }]
+    });
+
+    $scope.uploader.onAfterAddingFile = function(file){
+      var fR = new FileReader(),
+          extension = file._file.name.split('.')[file._file.name.split('.').length - 1],
+          result = {};
+      fR.addEventListener("load", function(event) {
+          var textFile = event.target,
+              raw = textFile.result;
+          var ok = typeof raw === 'string' && raw.length > 0;
+          if(ok){
+            $scope.loadedTemplate = {
+              title : 'custom template',
+              content : raw
+            };
+          $scope.activeTemplate = raw;
+          $scope.templateChoose = false;
+            $scope.$apply();
+          }
       });
-    }
 
-    $scope.closeAlert = function(index){
-      $scope.alerts.splice(index, 1);
+      //Read the text file
+      fR.readAsText(file._file);
     }
-
 
     /*
     API Dialog
