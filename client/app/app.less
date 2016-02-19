@@ -95,6 +95,7 @@ body
   cursor : pointer;
   opacity : .7;
   filter: blur(60px) grayscale(20%);
+  z-index : 10;
 }
 
 // .column:last-child{
@@ -295,6 +296,7 @@ a:hover
 .moving-header.minified
 {
     height: 6em;
+    overflow : hidden;
 }
 
 .moving-header.toggable.minified:hover
@@ -615,6 +617,7 @@ zotero-related interface
     background: inherit;
     display : flex;
     flex-flow : row wrap;
+    z-index : 11;
 }
 
 .connect-interface span,
