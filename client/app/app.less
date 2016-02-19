@@ -212,6 +212,7 @@ a:hover
 .long-container
 {
     overflow: hidden;
+    padding-right : 0;
     // overflow-y : auto;
 }
 
@@ -221,7 +222,8 @@ a:hover
 
     height: 100%;
     padding-top: 2em;
-    padding-bottom: 2em;
+    padding-bottom: 5em;
+    width : 100%;
 }
 
 .side-column .guttered
@@ -232,7 +234,7 @@ a:hover
 
 .side-column:first-of-type .guttered
 {
-    padding : 0 4em 0 2em;
+    padding : 0 4em 10em 2em;
 }
 
 .side-column h1
@@ -325,17 +327,17 @@ a:hover
 .inline-options-container
 {
     display: flex;
+    flex-flow : row wrap;
 }
 
 .inline-option
 {
     flex-grow: 1;
+    margin-bottom : .5em;
 }
 
 form.inline-option
 {
-    width: 100%;
-    padding-right: .5em;
 }
 
 .inline-option-big
@@ -433,12 +435,14 @@ input[type=text]
 {
     border: none;
     outline: none;
+    margin : 0;
 }
 
 input[type=submit]
 {
     border: none;
     background: #e7e7e7;
+    margin : 0;
 }
 
 input:focus
@@ -802,6 +806,7 @@ zotero-related interface
     max-height: 10em;
 
     border-bottom: 2px solid white;
+    overflow-y : auto;
 }
 .selected-list-container
 {
@@ -1059,10 +1064,7 @@ SPECIFIC COMPONENTS
 Markdown editor
 */
 
-.editor-container
-{
-    padding-right : 0;
-}
+
 
 .cm-s-default .cm-header-1
 {
@@ -1214,7 +1216,7 @@ RESPONSIVE DESIGN
         padding-left : 70px;
     }
 
-    #output-column .moving-header.minified h2
+    #output-column .moving-header h2
     {
         padding-right : 70px;
         text-align : left;
@@ -1222,20 +1224,50 @@ RESPONSIVE DESIGN
     }
 
 
-    .moving-header h2 span{
-        display : inline-block;
-    }
 
-    .moving-header.minified .step-number{
+    .moving-header .step-number{
         display : none;
     }
 
+    .connect-choice, .connect-interface{
+        margin: 2em;
+    }
 }
 
 /* col-xs */
 @media (max-width :768px)
 {
+    #editor-column .moving-header:not(.minified) h2{
+        opacity : 0;
+    }
+    body {
+        font-size : 1em;
+    }
+    .btn-group .btn{
+        font-size : .7em;
+    }
+    .moving-header>div{
+        width : 100%;
+        padding : 0;
+        overflow : hidden;
+        height : 100%;
+    }
 
+    .side-column .guttered
+    {
+        padding : 0.2em;
+    }
+
+    .big-list
+    {
+        margin-left : 0;
+        margin-right : 0;
+        font-size : .8em;
+    }
+
+    .moving-header.minified .step-number{
+        display : none;
+    }
 }
 
 
