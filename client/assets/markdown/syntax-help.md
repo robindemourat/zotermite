@@ -1,10 +1,10 @@
-# Markdown basics
+## Markdown basics
 
 Zotermite-flavoured markdown (ZFM) is based upon github-flavoured markdown.
 
 If you are not familiar with markdown, please check first [this documentation]( https://help.github.com/articles/basic-writing-and-formatting-syntax/) about the markdown language and its faculties.
 
-# Zotermite-flavoured markdown
+## Zotermite-flavoured markdown
 
 Zotermite works with a system of tags.
 Tags allow you to populate your template with zotero-based values.
@@ -15,7 +15,7 @@ In ZFM, there are four types of tags :
 * $ifnot$ and $endifnot$ : negative conditionnal
 * $loop$ and $endloop$ : recursivity
 
-# $set$ and implicit set
+## $set$ and implicit set
 
 This first tag allows you to replace some parts of your template with values coming from zotero about the selected items.
 
@@ -45,7 +45,7 @@ $title$
 
 ```
 
-## Arrays access
+#### Arrays access
 
 Some Zotero properties, such as creators, pdon't point to a single item but to several ones.
 
@@ -59,7 +59,7 @@ $creators[0]$
 
 Please not that using loops (see below) prevent you from having to access each item separately, because it loops through all of them.
 
-## Properties access
+#### Properties access
 
 Some Zotero properties, such as creators, are complex objects that feature several properties.
 
@@ -79,11 +79,11 @@ $author.lastName$
 
 You can get a list of the featured property in the "vocabulary" section of the help.
 
-## Modificators
+#### Modificators
 
 Template values can be modified through simple operations.
 
-### uppercase and lowercase
+###### uppercase and lowercase
 
 Transforms your value casing to uppercase or lowercase:
 
@@ -91,7 +91,7 @@ Transforms your value casing to uppercase or lowercase:
 $title:uppercase$
 ```
 
-### initials
+###### initials
 
 Fetch the initial of a value (made for first names of course, but do whatever you want with that):
 
@@ -99,7 +99,7 @@ Fetch the initial of a value (made for first names of course, but do whatever yo
 $creators[0].firstName:initials$
 ```
 
-### year
+###### year
 
 Extracts the year for a value (made for item dates of course, but do whatever you want with that):
 
@@ -108,9 +108,9 @@ $date:year$
 ```
 
 
-# $if$ and $endif$
+## $if$ and $endif$
 
-## Availability $if$
+#### Availability $if$
 
 Conditionals that display some parts of your template only if a specific value is available.
 
@@ -124,7 +124,7 @@ $endif:title$
 
 You will note that the endif statement also features ":title" in order to be recognized.
 
-## Comparator $if$
+#### Comparator $if$
 
 Conditionals that test your value against another.
 
@@ -164,7 +164,7 @@ Multiple authors
 $end:creators:lengthsuperior_to_1$
 ```
 
-# $ifnot$ and $endifnot$
+## $ifnot$ and $endifnot$
 
 Negative conditionals : display only if the condition is not fullfilled.
 
@@ -174,7 +174,7 @@ No title
 $endifnot:title$
 ```
 
-# $loop$ and $endloop$
+## $loop$ and $endloop$
 
 Loops allow you to process your template on zotero properties which are lists, as the list of creators. Whatever you write between the $loop$ and the $endloop$ tag will be repeated as much times as the list has items, and will substitute each of them with the name you give them in the loop.
 
@@ -187,7 +187,7 @@ $endloop:author in creators$
 ```
 
 
-## Loop separators and terminators
+#### Loop separators and terminators
 
 Additionnally, you can add to your loop some parameters about how to display items whether they are at the end of your list or not. For that purpose, you can add a *separator* and a *terminator* parameter to your $loop$ statement.
 

@@ -4,12 +4,18 @@
 @icon-font-path: '/bower_components/bootstrap/fonts/';
 @fa-font-path: '/bower_components/font-awesome/fonts';
 
+@import url(https://fonts.googleapis.com/css?family=Montserrat:400,700);
+
 
 @gutter : 1em;
 
 @shortDuration : .1s;
 @mediumDuration : .5s;
 @longDuration : 1s;
+
+@color1A : #27556C;
+@color2A : #28794B;
+@color3A : #313975;
 
 
 /**
@@ -27,6 +33,8 @@ body
 
     width: 100%;
     height: 100%;
+
+    font-family : 'Montserrat', sans-serif;
 }
 
 .wrapper
@@ -76,6 +84,7 @@ body
     margin: 0;
     padding: 0;
 }
+
 
 .column-cache
 {
@@ -214,17 +223,31 @@ a:hover
     padding-bottom: 2em;
 }
 
-.side-column .consultable-container
+.side-column .guttered
 {
     padding : 0 4em 0 4em;
 }
 
 
-.side-column:first-of-type .consultable-container
+.side-column:first-of-type .guttered
 {
     padding : 0 4em 0 2em;
 }
 
+.side-column h1
+{
+    text-transform: uppercase;
+    font-size : 1.7em;
+}
+
+.share-container
+{
+    margin  : 3em 0 1em 0;
+}
+.share-container span
+{
+    float : left;
+}
 
 .CodeMirror
 {
@@ -277,9 +300,6 @@ a:hover
 .moving-header.toggable.minified:hover
 {
     cursor: pointer;
-
-    color: darkgrey;
-    background: green;
 }
 
 
@@ -352,6 +372,8 @@ form.inline-option
 
     color: white;
     background: #333;
+
+    white-space : unset;
 }
 
 .btn-group .btn.active
@@ -434,12 +456,47 @@ FUN FUN FUN
     font-size: 1em;
 
     margin-right: 1em;
-    padding: .5em .8em .5em .8em;
+    padding: .5em .9em .5em .9em;
 
     color: white;
     border-radius: 50%;
     background: brown;
 }
+
+.column#editor-column .moving-header
+{
+
+    background : @color1A;
+}
+
+.column#zotero-column .moving-header
+{
+
+    background : @color2A;
+}
+
+.column#output-column .moving-header
+{
+    background : @color3A;
+}
+
+.column#editor-column .moving-header.toggable.minified:hover,
+.column#zotero-column .moving-header.toggable.minified:hover
+{
+    cursor: pointer;
+    background : brown;
+}
+
+.column#editor-column .moving-header.toggable.minified:hover .step-number
+{
+    background : @color1A;
+}
+
+.column#zotero-column .moving-header.toggable.minified:hover .step-number
+{
+    background : @color2A;
+}
+
 
 /*
 Templates selector
@@ -719,13 +776,13 @@ zotero-related interface
 .selected-items-container
 {
     color: white;
-    background: green;
+    background: @color2A;
 }
 
 .selected-items-container h3
 {
     font-size: 1em;
-
+    margin-top : 1em;
     text-transform: uppercase;
 }
 
@@ -1054,6 +1111,11 @@ Markdown editor
     color: brown;
 }
 
+.CodeMirror-code
+{
+    margin-bottom : 5em;
+}
+
 
 .export-group
 {
@@ -1144,6 +1206,26 @@ RESPONSIVE DESIGN
 /*col-sm*/
 @media (max-width:992px)
 {
+    #editor-column .moving-header.minified h2
+    {
+        padding-left : 70px;
+    }
+
+    #output-column .moving-header.minified h2
+    {
+        padding-right : 70px;
+        text-align : left;
+        padding-left : 1em;
+    }
+
+
+    .moving-header h2 span{
+        display : inline-block;
+    }
+
+    .moving-header.minified .step-number{
+        display : none;
+    }
 
 }
 
