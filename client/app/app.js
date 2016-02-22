@@ -10,9 +10,10 @@ angular.module('zotermiteApp', [
   'ui.codemirror',
   'angularFileUpload',
   'angulike',
-  'ngClipboard'
+  'ngClipboard',
+  'angularytics'
 ])
-  .config(function ($routeProvider, $locationProvider, markedProvider, ngClipProvider) {
+  .config(function ($routeProvider, $locationProvider, markedProvider, ngClipProvider, AngularyticsProvider) {
     $routeProvider
       .otherwise({
         redirectTo: '/'
@@ -27,4 +28,10 @@ angular.module('zotermiteApp', [
     });
 
     ngClipProvider.setPath("bower_components/zeroclipboard/dist/ZeroClipboard.swf");
+
+    // AngularyticsProvider.setEventHandlers(['Console', 'GoogleUniversal']);
+    AngularyticsProvider.setEventHandlers(['GoogleUniversal']);
+
+  }).run(function(Angularytics) {
+    Angularytics.init();
   });

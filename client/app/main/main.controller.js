@@ -2,7 +2,7 @@
 
 
 angular.module('zotermiteApp')
-  .controller('MainCtrl', function ($scope, $cookieStore, $log, $http, $timeout, ZoteroQueryHandler, ZoteroQueryBuilder, ZoteroTemplateParser, FileDownload, codemirrorMarkdown, FileUploader) {
+  .controller('MainCtrl', function ($scope, $cookieStore, $log, $http, $timeout, ZoteroQueryHandler, ZoteroQueryBuilder, ZoteroTemplateParser, FileDownload, codemirrorMarkdown, FileUploader, Angularytics) {
     var query;
 
     var initVariables = function(){
@@ -14,13 +14,15 @@ angular.module('zotermiteApp')
       $scope.inputAPIkey = "";
       $scope.inputUserId = "";
 
+      $scope.connectingZotero = true;
+
 
       var retrievedUserId = $cookieStore.get('zoteroUserId');
       var retrievedAPIkey = $cookieStore.get('zoteroAPIkey');
 
-      $scope.connectingZotero = true;
 
       if(retrievedUserId && retrievedAPIkey){
+        Angularytics.trackEvent("Zotero connection", "zotero credentials fetched from cookies");
         $scope.userId = retrievedUserId;
         $scope.apiKey = retrievedAPIkey;
         $scope.inputUserId = $scope.userId;
@@ -72,7 +74,7 @@ angular.module('zotermiteApp')
       }
     }
 
-    $scope.setZoteroCredentials = function(apiKey, userId){
+    $scope.setZoteroCredentials = function(apiKey, userId, fromInterface){
       if(apiKey.length === 0 || !userId.length === 0){
         return;
       }
@@ -80,6 +82,8 @@ angular.module('zotermiteApp')
         $scope.connectingZotero = false;
         return;
       }
+
+
       $scope.connectingZotero = true;
       $scope.zoteroPending = true;
       $scope.zoteroStatus = 'Connecting to zotero ...';
@@ -91,6 +95,9 @@ angular.module('zotermiteApp')
         if(err){
           $scope.zoteroStatus = 'Could not connect to Zotero : '+err;
         }else{
+          if(fromInterface){
+            Angularytics.trackEvent("Zotero connection", "set new zotero credentials from form");
+          }
           $scope.userId = userId;
           $scope.apiKey = apiKey;
           $scope.inputUserId = userId;
@@ -115,6 +122,7 @@ angular.module('zotermiteApp')
     $scope.setDefaultZoteroCredentials = function(){
       $http.get('assets/default-credentials/zotero-credentials.json')
         .success(function(credentials){
+          Angularytics.trackEvent("Zotero connection", "Set Zotero default account");
           $scope.setZoteroCredentials(credentials.apiKey, credentials.userId);
         }).error(function(){
             $log.error('credentials not found. Write them in root/credentials/credentials.json with an object containing properties userId and apiKey, or paste your API in the interface.')
@@ -349,6 +357,7 @@ angular.module('zotermiteApp')
 
     $scope.setSortMode = function(mode){
       $scope.sortMode = mode;
+      Angularytics.trackEvent("Output", "Set sort mode to ", mode);
       console.log('new sort mode : ', $scope.sortMode, ', sort ascending :', $scope.sortAscending);
       sortSelectedItems();
       setTimeout(function(){
@@ -360,6 +369,7 @@ angular.module('zotermiteApp')
       $scope.sortAscending = ascending;
       setTimeout(function(){
         $scope.$apply();
+        console.info('sort ascending mode : ', $scope.sortAscending);
         sortSelectedItems();
       });
     }
@@ -406,6 +416,7 @@ angular.module('zotermiteApp')
     };
 
     $scope.addAllMatching = function(){
+        Angularytics.trackEvent("Interaction", "Used add all functionality");
       var matching = $scope.overallItems.filter($scope.searchInItem);
       for(var i in matching){
         var index = findItem(matching[i], $scope.overallItems);
@@ -454,6 +465,7 @@ angular.module('zotermiteApp')
     };
 
     $scope.newZoteroQuery = function(expression, callback){
+      Angularytics.trackEvent("Zotero connection", "launched Zotero query");
       $scope.zoteroPending = true;
       query.quickSearch(expression).start(0);
       $log.info('new query to zotero', expression);
@@ -478,6 +490,7 @@ angular.module('zotermiteApp')
     }
 
     $scope.downloadItems = function(items){
+      Angularytics.trackEvent("Output", "Downloaded items");
       if($scope.exportAsList){
         var output = '';
         for(var i in items){
@@ -497,10 +510,12 @@ angular.module('zotermiteApp')
     };
 
     $scope.downloadActiveTemplate = function(){
+      Angularytics.trackEvent("Output", "Downloaded template");
       downloadFile($scope.activeTemplate, 'my_zotermite_template');
     }
 
     $scope.copyToClipboard = function(items){
+      Angularytics.trackEvent("Output", "Copied items to clipboard");
       console.info('copying items to clipboard ', items);
       var output = "";
       for(var i in items){
@@ -573,6 +588,7 @@ angular.module('zotermiteApp')
           $scope.activeTemplate = template.content;
           $scope.templateChoose = false;
 
+          Angularytics.trackEvent("Templates", "Using template "+name);
           setTimeout(function(){
             $scope.$apply();
           })
