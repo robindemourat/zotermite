@@ -1,7 +1,7 @@
 Zotermite - when markdown meets zotero
 ============
 
-
+![Zotermite screencast](https://raw.githubusercontent.com/robindemourat/zotermite/master/zotermite-screencast.gif)
 
 Zotermite is an open-source app aimed at facilitating the use of academic references in markdown documents.
 
