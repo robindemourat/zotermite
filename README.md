@@ -1,6 +1,6 @@
-Zotermite
+Zotermite - when markdown meets zotero
 ============
-# When Markdown meets Zotero
+
 
 
 Zotermite is an open-source app aimed at facilitating the use of academic references in markdown documents.
